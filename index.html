@@ -150,6 +150,8 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
 .flinks a{font-size:13px;color:var(--muted);text-decoration:none}
 .flinks a:hover{color:var(--g2)}
 .fcopy{font-size:12px;color:var(--muted)}
+.nav-av{width:34px;height:34px;border-radius:50%;background:var(--g6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g2);cursor:pointer;text-decoration:none;border:2px solid transparent;transition:border-color .2s}
+.nav-av:hover{border-color:var(--g3)}
 @media(max-width:900px){.plans{grid-template-columns:1fr}.hero{grid-template-columns:1fr;gap:40px;padding:60px 4% 50px}.steps{grid-template-columns:1fr;gap:28px}footer{flex-direction:column;text-align:center}.nav-links{display:none}}
 </style>
 </head>
@@ -161,7 +163,7 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
     <li><a href="#usecases">Cas d'usage</a></li>
     <li><a href="#pricing">Tarifs</a></li>
   </ul>
-  <div class="nav-actions">
+  <div class="nav-actions" id="nav-actions">
     <a href="login.html" class="btn btn-g">Connexion</a>
     <a href="signup.html" class="btn btn-p">Essai gratuit</a>
   </div>
@@ -429,6 +431,21 @@ async function checkout(plan) {
   };
   document.head.appendChild(s);
 }
+
+// Vérifie si connecté et adapte la nav
+async function checkSession() {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) {
+    const user = session.user;
+    const name = user.user_metadata?.full_name || user.email.split('@')[0];
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    document.getElementById('nav-actions').innerHTML = `
+      <a href="home.html" class="btn btn-g">🏠 Accueil</a>
+      <a href="home.html" class="nav-av" title="${name}">${initials}</a>
+    `;
+  }
+}
+checkSession();
 </script>
 </body>
 </html>
