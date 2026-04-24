@@ -1,7 +1,36 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/login", "dest": "/login.html" },
-    { "src": "/signup", "dest": "/signup.html" }
+    {
+      "src": "/styles/(.*)",
+      "headers": {
+        "content-type": "text/css"
+      },
+      "dest": "/styles/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/login.html"
+    },
+    {
+      "src": "/signup",
+      "dest": "/signup.html"
+    },
+    {
+      "src": "/create",
+      "dest": "/create.html"
+    },
+    {
+      "src": "/chat",
+      "dest": "/chat.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    }
   ]
 }
