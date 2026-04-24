@@ -396,40 +396,23 @@ function setBilling(y) {
   document.getElementById('biz-per').textContent = y ? '/mois · facturé 461€/an' : '/mois · facturé mensuellement';
 }
 
-async function checkout(plan) {
-  const spinEl = document.getElementById(plan === 'pro' ? 'pro-spin' : 'biz-spin');
-  const lblEl  = document.getElementById(plan === 'pro' ? 'pro-lbl'  : 'biz-lbl');
-  const btnEl  = document.getElementById(plan === 'pro' ? 'pro-btn'  : 'biz-btn');
-  spinEl.style.display = 'block'; lblEl.style.display = 'none'; btnEl.disabled = true;
+const PAYMENT_LINKS = {
+  pro_m:  'https://buy.stripe.com/4gM7sL6ds0GidmEabP1kA01',
+  pro_y:  'https://buy.stripe.com/00w9AT6ds4WydmEfw91kA02',
+  biz_m:  'https://buy.stripe.com/3cI00j59ocp03M497L1kA03',
+  biz_y:  'https://buy.stripe.com/fZu8wP59o74GdmE1Fj1kA04',
+};
 
+async function checkout(plan) {
   const { data: { session } } = await db.auth.getSession();
   if (!session) {
-    spinEl.style.display = 'none'; lblEl.style.display = 'inline'; btnEl.disabled = false;
     window.location.href = 'signup.html';
     return;
   }
-
-  const priceId = plan === 'pro'
-    ? (yearly ? PRICE_IDS.pro_y : PRICE_IDS.pro_m)
-    : (yearly ? PRICE_IDS.biz_y : PRICE_IDS.biz_m);
-
-  const s = document.createElement('script');
-  s.src = 'https://js.stripe.com/v3/';
-  s.onload = async () => {
-    const stripe = Stripe(STRIPE_PK);
-    const { error } = await stripe.redirectToCheckout({
-      lineItems: [{ price: priceId, quantity: 1 }],
-      mode: 'subscription',
-      successUrl: window.location.origin + '/success.html?plan=' + plan,
-      cancelUrl: window.location.origin + '/index.html#pricing',
-      customerEmail: session.user.email,
-    });
-    if (error) {
-      alert('Erreur Stripe : ' + error.message);
-      spinEl.style.display = 'none'; lblEl.style.display = 'inline'; btnEl.disabled = false;
-    }
-  };
-  document.head.appendChild(s);
+  const link = plan === 'pro'
+    ? (yearly ? PAYMENT_LINKS.pro_y : PAYMENT_LINKS.pro_m)
+    : (yearly ? PAYMENT_LINKS.biz_y : PAYMENT_LINKS.biz_m);
+  window.location.href = link;
 }
 
 // Vérifie si connecté et adapte la nav
