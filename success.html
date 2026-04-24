@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paiement confirmé — TopIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g1:#0E3D1F;--g2:#1A6B3A;--g3:#2E9B5A;--g4:#4DBF7F;--g5:#A8DFBF;--g6:#D4F0E2;--g7:#EDF9F2;--g8:#F6FCF9;--ink:#0F1F14;--muted:#7A9A84;--line:#D6E8DC;--fd:'DM Serif Display',serif;--fb:'DM Sans',sans-serif}
+body{font-family:var(--fb);background:var(--g8);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;-webkit-font-smoothing:antialiased}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:60px 48px;max-width:500px;width:100%;text-align:center;box-shadow:0 8px 48px rgba(14,61,31,.08)}
+.icon-wrap{width:80px;height:80px;border-radius:50%;background:var(--g7);display:flex;align-items:center;justify-content:center;margin:0 auto 28px}
+.icon-wrap svg{width:40px;height:40px;stroke:var(--g2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.confetti{font-size:2.5rem;margin-bottom:8px}
+h1{font-family:var(--fd);font-size:2rem;color:var(--ink);margin-bottom:12px}
+.sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:380px;margin:0 auto 36px}
+.plan-badge{display:inline-block;background:var(--g7);border:1px solid var(--g5);color:var(--g2);font-size:13px;font-weight:600;padding:6px 18px;border-radius:100px;margin-bottom:28px}
+.actions{display:flex;flex-direction:column;gap:12px}
+.btn{font-family:var(--fb);font-size:15px;font-weight:600;padding:14px 28px;border-radius:11px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-p{background:var(--g1);color:#fff}.btn-p:hover{background:var(--g2)}
+.btn-g{background:none;color:var(--ink);border:1px solid var(--line)}.btn-g:hover{border-color:var(--g3);color:var(--g2)}
+.logo{font-family:var(--fd);font-size:1.3rem;color:var(--g1);margin-bottom:40px;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+.logo-dot{width:9px;height:9px;background:var(--g3);border-radius:50%}
+</style>
+</head>
+<body>
+<a href="index.html" class="logo"><span class="logo-dot"></span>TopIA</a>
+<div class="card">
+  <div class="confetti">🎉</div>
+  <div class="icon-wrap">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h1>Paiement confirmé !</h1>
+  <div class="plan-badge" id="plan-name">✦ Plan Pro activé</div>
+  <p class="sub">Votre abonnement est actif. Vous avez maintenant accès à toutes les fonctionnalités de votre plan. Bienvenue dans la famille TopIA !</p>
+  <div class="actions">
+    <a href="dashboard.html" class="btn btn-p">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Aller à mon dashboard
+    </a>
+    <a href="create.html" class="btn btn-g">⚡ Créer une nouvelle IA</a>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL = 'https://bpmnbmbskimzeoawdtck.supabase.co';
+const SUPA_KEY = 'sb_publishable_l7bRvgvLdjCvxlNq7AtpJA_bm6axytJ';
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// Met à jour le plan de l'utilisateur en base
+async function updatePlan() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) return;
+  const params = new URLSearchParams(window.location.search);
+  const plan = params.get('plan') || 'pro';
+  document.getElementById('plan-name').textContent = `✦ Plan ${plan === 'business' ? 'Business' : 'Pro'} activé`;
+  await db.from('profiles').update({ plan }).eq('id', session.user.id);
+}
+updatePlan();
+</script>
+</body>
+</html>
