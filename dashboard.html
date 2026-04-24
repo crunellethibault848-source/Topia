@@ -1,241 +1,250 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — TopIA</title>
-  <link rel="stylesheet" href="styles/main.css">
-  <style>
-    body{background:#F6FCF9;display:flex;flex-direction:column;min-height:100vh}
-    .shell{display:grid;grid-template-columns:220px 1fr;flex:1}
-    .sidenav{background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:0;min-height:calc(100vh - 68px)}
-    .sn-section{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:18px 20px 8px}
-    .sn-item{display:flex;align-items:center;gap:10px;padding:10px 14px 10px 20px;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .15s;margin:1px 8px;border-radius:8px;text-decoration:none}
-    .sn-item:hover{background:var(--g8);color:var(--g2)}
-    .sn-item.active{background:var(--g7);color:var(--g1);font-weight:600}
-    .sn-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-    .sn-badge{margin-left:auto;font-size:11px;font-weight:700;background:var(--g3);color:#fff;padding:2px 7px;border-radius:100px}
-    .sn-footer{margin-top:auto;padding:16px;border-top:1px solid var(--line)}
-    .sn-user{display:flex;align-items:center;gap:10px}
-    .sn-avatar{width:34px;height:34px;border-radius:50%;background:var(--g6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g2);flex-shrink:0}
-    .sn-uname{font-size:13px;font-weight:600;color:var(--ink)}
-    .sn-plan{font-size:11px;color:var(--g3);font-weight:500}
-    .main{overflow-y:auto}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--line);background:#fff}
-    .tb-title{font-family:var(--font-display);font-size:1.4rem;color:var(--ink)}
-    .tb-sub{font-size:13px;color:var(--muted);margin-top:1px}
-    .tb-actions{display:flex;gap:10px;align-items:center}
-    .btn-sm{font-family:var(--font-body);font-size:13px;font-weight:500;padding:9px 16px;border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;text-decoration:none}
-    .btn-sm svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .btn-sm-outline{background:none;border:1px solid var(--line);color:var(--ink2)}
-    .btn-sm-outline:hover{border-color:var(--g3);color:var(--g2)}
-    .btn-sm-filled{background:var(--g1);border:none;color:#fff;font-weight:600}
-    .btn-sm-filled:hover{background:var(--g2)}
-    .content{padding:24px 28px}
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-    .stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
-    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
-    .sc-green::before{background:var(--g3)}.sc-amber::before{background:#EF9F27}.sc-blue::before{background:#378ADD}.sc-teal::before{background:#1D9E75}
-    .stat-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:8px}
-    .stat-val{font-family:var(--font-display);font-size:2rem;color:var(--ink);line-height:1}
-    .stat-delta{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:4px}
-    .delta-up{color:#1A6B3A;font-weight:600}
-    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-    .section-label{font-size:14px;font-weight:600;color:var(--ink)}
-    .section-action{font-size:13px;color:var(--g2);cursor:pointer;font-weight:500;background:none;border:none;font-family:var(--font-body);text-decoration:none}
-    .chart-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:24px}
-    .chart-tabs{display:flex;gap:4px;margin-bottom:18px}
-    .ctab{font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);transition:all .15s;font-family:var(--font-body)}
-    .ctab.active{background:var(--g1);color:#fff;border-color:var(--g1)}
-    .chart-area{height:160px;position:relative;display:flex;align-items:flex-end;gap:6px;padding:0 4px}
-    .bar{border-radius:6px 6px 0 0;transition:all .3s;cursor:pointer;position:relative;flex:1}
-    .bar:hover{opacity:.8}
-    .bar-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
-    .bar-val{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--ink2);white-space:nowrap;opacity:0;transition:opacity .15s}
-    .bar:hover .bar-val{opacity:1}
-    .chart-footer{display:flex;justify-content:space-between;margin-top:24px;padding-top:14px;border-top:1px solid var(--g8)}
-    .cf-item{text-align:center}
-    .cf-val{font-size:15px;font-weight:700;color:var(--ink);font-family:var(--font-display)}
-    .cf-label{font-size:11px;color:var(--muted);margin-top:2px}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-    .ia-list{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
-    .ia-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:all .2s}
-    .ia-card:hover{border-color:var(--g4)}
-    .ia-emoji{font-size:26px;width:50px;height:50px;background:var(--g8);border:1px solid var(--line);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .ia-body{flex:1;min-width:0}
-    .ia-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px}
-    .ia-domain{font-size:12px;color:var(--g3);font-weight:500;margin-bottom:8px}
-    .ia-metrics{display:flex;gap:16px}
-    .ia-metric{font-size:12px;color:var(--muted)}
-    .ia-metric strong{color:var(--ink2);font-weight:600}
-    .ia-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin-right:12px}
-    .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-    .s-online{background:var(--g4);animation:blink 2s infinite}
-    .s-offline{background:#B4B2A9}
-    .s-widget{background:#378ADD}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-    .ia-actions{display:flex;gap:8px;flex-shrink:0}
-    .ia-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;text-decoration:none}
-    .ia-btn:hover{border-color:var(--g3);background:var(--g8)}
-    .ia-btn svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .ia-btn:hover svg{stroke:var(--g2)}
-    .add-ia-card{background:#fff;border:1.5px dashed var(--line);border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all .2s;color:var(--muted);font-size:14px;font-weight:500;text-decoration:none}
-    .add-ia-card:hover{border-color:var(--g3);color:var(--g2);background:var(--g8)}
-    .add-ia-card svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .activity-list{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-    .activity-item{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--g8);transition:background .15s}
-    .activity-item:last-child{border:none}
-    .activity-item:hover{background:var(--g8)}
-    .act-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
-    .act-green{background:var(--g7)}.act-amber{background:#FAEEDA}.act-blue{background:#E6F1FB}
-    .act-text{flex:1;min-width:0}
-    .act-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
-    .act-sub{font-size:12px;color:var(--muted)}
-    .act-time{font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0}
-    .plan-card{background:var(--g8);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
-    .plan-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .plan-name{font-size:13px;font-weight:700;color:var(--g1)}
-    .plan-badge{font-size:11px;font-weight:700;color:var(--g2);background:var(--g6);padding:3px 10px;border-radius:100px}
-    .plan-progress{height:6px;background:var(--g6);border-radius:100px;margin-bottom:6px;overflow:hidden}
-    .plan-bar{height:100%;background:var(--g3);border-radius:100px}
-    .plan-limits{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-    .pl-item{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px}
-    .pl-label{font-size:11px;color:var(--muted);margin-bottom:4px}
-    .pl-val{font-size:14px;font-weight:700;color:var(--ink);font-family:var(--font-display)}
-    .pl-max{font-size:11px;color:var(--muted)}
-    @media(max-width:768px){.shell{grid-template-columns:1fr}.sidenav{display:none}.stats-row{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — TopIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g1:#0E3D1F;--g2:#1A6B3A;--g3:#2E9B5A;--g4:#4DBF7F;--g5:#A8DFBF;--g6:#D4F0E2;--g7:#EDF9F2;--g8:#F6FCF9;--ink:#0F1F14;--ink2:#2D4A36;--muted:#7A9A84;--line:#D6E8DC;--fd:'DM Serif Display',serif;--fb:'DM Sans',sans-serif}
+body{font-family:var(--fb);background:var(--g8);color:var(--ink);-webkit-font-smoothing:antialiased}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:100}
+.logo{font-family:var(--fd);font-size:1.4rem;color:var(--g1);display:flex;align-items:center;gap:7px;text-decoration:none}
+.logo-dot{width:9px;height:9px;background:var(--g3);border-radius:50%}
+.nav-right{display:flex;align-items:center;gap:12px}
+.btn{font-family:var(--fb);font-size:14px;font-weight:600;padding:10px 22px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn-p{background:var(--g1);color:#fff}.btn-p:hover{background:var(--g2)}
+.btn-g{background:none;color:var(--ink2);border:1px solid var(--line)}.btn-g:hover{border-color:var(--g3);color:var(--g2)}
+.user-av{width:34px;height:34px;border-radius:50%;background:var(--g6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g2);cursor:pointer;flex-shrink:0}
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 64px)}
+.sidenav{background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.sn-sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:18px 20px 8px}
+.sn-item{display:flex;align-items:center;gap:10px;padding:10px 14px 10px 20px;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .15s;margin:1px 8px;border-radius:8px;text-decoration:none}
+.sn-item:hover{background:var(--g8);color:var(--g2)}
+.sn-item.active{background:var(--g7);color:var(--g1);font-weight:600}
+.sn-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sn-footer{margin-top:auto;padding:16px;border-top:1px solid var(--line)}
+.sn-user{display:flex;align-items:center;gap:10px}
+.sn-uname{font-size:13px;font-weight:600;color:var(--ink)}
+.sn-plan{font-size:11px;color:var(--g3);font-weight:500}
+.signout-btn{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;margin-left:auto;font-family:var(--fb)}
+.signout-btn:hover{color:#E24B4A}
+.main{overflow-y:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;border-bottom:1px solid var(--line);background:#fff}
+.tb-title{font-family:var(--fd);font-size:1.5rem;color:var(--ink)}
+.tb-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.content{padding:24px 28px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.sc1::before{background:var(--g3)}.sc2::before{background:#EF9F27}.sc3::before{background:#378ADD}.sc4::before{background:#1D9E75}
+.stat-lbl{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:8px}
+.stat-val{font-family:var(--fd);font-size:2rem;color:var(--ink);line-height:1}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:6px}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-lbl{font-size:15px;font-weight:600;color:var(--ink)}
+.ia-list{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.ia-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:border-color .2s}
+.ia-card:hover{border-color:var(--g4)}
+.ia-emo{font-size:26px;width:50px;height:50px;background:var(--g8);border:1px solid var(--line);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ia-body{flex:1;min-width:0}
+.ia-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.ia-domain{font-size:12px;color:var(--g3);font-weight:500;margin-bottom:8px}
+.ia-metrics{display:flex;gap:16px;flex-wrap:wrap}
+.ia-metric{font-size:12px;color:var(--muted)}
+.ia-metric strong{color:var(--ink2);font-weight:600}
+.ia-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin-right:12px;white-space:nowrap}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.s-on{background:var(--g4);animation:blink 2s infinite}
+.s-off{background:#B4B2A9}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.ia-actions{display:flex;gap:8px;flex-shrink:0}
+.ia-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;text-decoration:none}
+.ia-btn:hover{border-color:var(--g3);background:var(--g8)}
+.ia-btn svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ia-btn:hover svg{stroke:var(--g2)}
+.add-ia{background:#fff;border:1.5px dashed var(--line);border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all .2s;color:var(--muted);font-size:14px;font-weight:500;text-decoration:none}
+.add-ia:hover{border-color:var(--g3);color:var(--g2);background:var(--g8)}
+.add-ia svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.empty-state{text-align:center;padding:60px 20px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.empty-icon{font-size:48px;margin-bottom:16px}
+.empty-title{font-family:var(--fd);font-size:1.4rem;color:var(--ink);margin-bottom:8px}
+.empty-sub{font-size:14px;color:var(--muted);line-height:1.65;max-width:340px;margin:0 auto 24px}
+.plan-card{background:var(--g8);border:1px solid var(--line);border-radius:14px;padding:20px}
+.plan-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.plan-name{font-size:13px;font-weight:700;color:var(--g1)}
+.plan-badge{font-size:11px;font-weight:700;color:var(--g2);background:var(--g6);padding:3px 10px;border-radius:100px}
+.plan-prog{height:6px;background:var(--g6);border-radius:100px;margin-bottom:6px;overflow:hidden}
+.plan-bar{height:100%;background:var(--g3);border-radius:100px}
+.plan-limits{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.pl-item{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px}
+.pl-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+.pl-val{font-size:14px;font-weight:700;color:var(--ink);font-family:var(--fd)}
+.loading{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--muted);font-size:14px;gap:12px}
+.spin{width:20px;height:20px;border:2.5px solid var(--line);border-top-color:var(--g3);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:768px){.shell{grid-template-columns:1fr}.sidenav{display:none}.stats-row{grid-template-columns:1fr 1fr}.content{padding:16px}}
+</style>
 </head>
 <body>
-<nav class="topia-nav">
-  <a href="index.html" class="nav-logo"><span class="nav-logo-dot"></span>TopIA</a>
-  <div class="nav-actions">
-    <a href="chat.html" class="btn btn-ghost">💬 Chat</a>
-    <a href="create.html" class="btn btn-primary">+ Nouvelle IA</a>
+<nav>
+  <a href="index.html" class="logo"><span class="logo-dot"></span>TopIA</a>
+  <div class="nav-right">
+    <a href="chat.html" class="btn btn-g">💬 Chat</a>
+    <a href="create.html" class="btn btn-p">+ Nouvelle IA</a>
+    <div class="user-av" id="nav-avatar">?</div>
   </div>
 </nav>
 
 <div class="shell">
   <div class="sidenav">
-    <div class="sn-section">Menu</div>
+    <div class="sn-sec">Menu</div>
     <a href="dashboard.html" class="sn-item active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
     <a href="chat.html" class="sn-item"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Conversations</a>
-    <a href="create.html" class="sn-item"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5 5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5m0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>Mes IAs<span class="sn-badge">3</span></a>
-    <div class="sn-section">Compte</div>
+    <a href="create.html" class="sn-item"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Créer une IA</a>
+    <div class="sn-sec">Compte</div>
     <a href="#" class="sn-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M20 12h2M2 12h2M12 2v2M12 20v2"/></svg>Paramètres</a>
-    <a href="#" class="sn-item"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Abonnement</a>
     <div class="sn-footer">
       <div class="sn-user">
-        <div class="sn-avatar">TD</div>
-        <div><div class="sn-uname">Thomas D.</div><div class="sn-plan">Plan Pro · 18€/mois</div></div>
+        <div class="user-av" id="sn-avatar">?</div>
+        <div><div class="sn-uname" id="sn-name">Chargement...</div><div class="sn-plan">Plan Découverte</div></div>
+        <button class="signout-btn" onclick="signOut()">Déco</button>
       </div>
     </div>
   </div>
 
   <div class="main">
     <div class="topbar">
-      <div><div class="tb-title">Bonjour, Thomas 👋</div><div class="tb-sub">Voici un aperçu de vos IAs — Avril 2025</div></div>
-      <div class="tb-actions">
-        <a href="create.html" class="btn-sm btn-sm-filled"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouvelle IA</a>
+      <div>
+        <div class="tb-title" id="welcome-title">Bonjour 👋</div>
+        <div class="tb-sub">Voici un aperçu de vos IAs</div>
       </div>
+      <a href="create.html" class="btn btn-p">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nouvelle IA
+      </a>
     </div>
 
     <div class="content">
       <div class="stats-row">
-        <div class="stat-card sc-green"><div class="stat-label">Messages ce mois</div><div class="stat-val" id="stat-msgs">1 284</div><div class="stat-delta"><span class="delta-up">↑ +18%</span><span style="color:var(--muted)">vs mois dernier</span></div></div>
-        <div class="stat-card sc-amber"><div class="stat-label">Conversations actives</div><div class="stat-val">47</div><div class="stat-delta"><span class="delta-up">↑ +6</span><span style="color:var(--muted)">cette semaine</span></div></div>
-        <div class="stat-card sc-blue"><div class="stat-label">IAs déployées</div><div class="stat-val">3</div><div class="stat-delta"><span style="color:var(--muted)">5 disponibles · Plan Pro</span></div></div>
-        <div class="stat-card sc-teal"><div class="stat-label">Satisfaction</div><div class="stat-val">96%</div><div class="stat-delta"><span class="delta-up">↑ +2%</span><span style="color:var(--muted)">vs mois dernier</span></div></div>
+        <div class="stat-card sc1"><div class="stat-lbl">Messages total</div><div class="stat-val" id="stat-msgs">0</div><div class="stat-sub">Toutes vos IAs</div></div>
+        <div class="stat-card sc2"><div class="stat-lbl">Conversations</div><div class="stat-val" id="stat-convos">0</div><div class="stat-sub">Démarrées</div></div>
+        <div class="stat-card sc3"><div class="stat-lbl">IAs créées</div><div class="stat-val" id="stat-agents">0</div><div class="stat-sub">Sur 1 disponible</div></div>
+        <div class="stat-card sc4"><div class="stat-lbl">Plan actuel</div><div class="stat-val" style="font-size:1.2rem" id="stat-plan">Découverte</div><div class="stat-sub"><a href="#" style="color:var(--g2);text-decoration:none;font-size:12px">Upgrader →</a></div></div>
       </div>
 
-      <div class="chart-card">
-        <div class="section-header">
-          <div class="section-label">Activité des messages</div>
-          <div class="chart-tabs">
-            <button class="ctab active" onclick="switchTab(this,'7j')">7 jours</button>
-            <button class="ctab" onclick="switchTab(this,'30j')">30 jours</button>
-            <button class="ctab" onclick="switchTab(this,'90j')">90 jours</button>
-          </div>
-        </div>
-        <div class="chart-area" id="chart-area"></div>
-        <div class="chart-footer">
-          <div class="cf-item"><div class="cf-val">1 284</div><div class="cf-label">Total messages</div></div>
-          <div class="cf-item"><div class="cf-val">183</div><div class="cf-label">Moyenne/jour</div></div>
-          <div class="cf-item"><div class="cf-val">312</div><div class="cf-label">Pic journalier</div></div>
-          <div class="cf-item"><div class="cf-val">4.2 min</div><div class="cf-label">Durée moy.</div></div>
-        </div>
+      <div class="section-hdr">
+        <div class="section-lbl">Mes IAs</div>
+        <a href="create.html" class="btn btn-g" style="padding:8px 16px;font-size:13px">+ Créer une IA</a>
+      </div>
+      <div class="ia-list" id="ia-list">
+        <div class="loading"><div class="spin"></div>Chargement de vos IAs...</div>
       </div>
 
-      <div class="section-header"><div class="section-label">Mes IAs</div><a href="create.html" class="section-action">+ Créer une IA</a></div>
-      <div class="ia-list">
-        <div class="ia-card">
-          <div class="ia-emoji">📈</div>
-          <div class="ia-body"><div class="ia-name">TradeIA Pro</div><div class="ia-domain">Trading & Finance</div><div class="ia-metrics"><div class="ia-metric"><strong>847</strong> messages</div><div class="ia-metric"><strong>31</strong> conversations</div><div class="ia-metric"><strong>98%</strong> satisfaction</div></div></div>
-          <div class="ia-status"><span class="status-dot s-online"></span><span style="color:var(--g2);font-size:12px">En ligne</span></div>
-          <div class="ia-actions">
-            <a href="chat.html" class="ia-btn" title="Chat"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></a>
-            <a href="create.html" class="ia-btn" title="Modifier"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></a>
-          </div>
-        </div>
-        <div class="ia-card">
-          <div class="ia-emoji">🏠</div>
-          <div class="ia-body"><div class="ia-name">HomeHelper</div><div class="ia-domain">Maison & Quotidien</div><div class="ia-metrics"><div class="ia-metric"><strong>312</strong> messages</div><div class="ia-metric"><strong>12</strong> conversations</div><div class="ia-metric"><strong>94%</strong> satisfaction</div></div></div>
-          <div class="ia-status"><span class="status-dot s-widget"></span><span style="color:#185FA5;font-size:12px">Widget actif</span></div>
-          <div class="ia-actions">
-            <a href="chat.html" class="ia-btn" title="Chat"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></a>
-            <a href="create.html" class="ia-btn" title="Modifier"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></a>
-          </div>
-        </div>
-        <div class="ia-card">
-          <div class="ia-emoji">⚖️</div>
-          <div class="ia-body"><div class="ia-name">LexBot</div><div class="ia-domain">Droit & Administratif</div><div class="ia-metrics"><div class="ia-metric"><strong>125</strong> messages</div><div class="ia-metric"><strong>4</strong> conversations</div><div class="ia-metric"><strong>91%</strong> satisfaction</div></div></div>
-          <div class="ia-status"><span class="status-dot s-offline"></span><span style="color:var(--muted);font-size:12px">Hors ligne</span></div>
-          <div class="ia-actions">
-            <a href="chat.html" class="ia-btn" title="Chat"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></a>
-            <a href="create.html" class="ia-btn" title="Modifier"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></a>
-          </div>
-        </div>
-        <a href="create.html" class="add-ia-card"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Créer une nouvelle IA</a>
+      <div class="section-hdr" style="margin-top:8px">
+        <div class="section-lbl">Mon abonnement</div>
       </div>
-
-      <div class="grid-2">
-        <div>
-          <div class="section-header"><div class="section-label">Activité récente</div></div>
-          <div class="activity-list">
-            <div class="activity-item"><div class="act-icon act-green">📈</div><div class="act-text"><div class="act-title">Nouvelle conversation · TradeIA Pro</div><div class="act-sub">Analyse Bitcoin semaine en cours</div></div><div class="act-time">Il y a 2 min</div></div>
-            <div class="activity-item"><div class="act-icon act-blue">🔗</div><div class="act-text"><div class="act-title">Widget activé · HomeHelper</div><div class="act-sub">Intégré sur mon-site.fr</div></div><div class="act-time">Il y a 1h</div></div>
-            <div class="activity-item"><div class="act-icon act-amber">⚙️</div><div class="act-text"><div class="act-title">LexBot mis à jour</div><div class="act-sub">Nouveau prompt de mission</div></div><div class="act-time">Hier 16h</div></div>
-            <div class="activity-item"><div class="act-icon act-green">⭐</div><div class="act-text"><div class="act-title">Satisfaction 98% · TradeIA Pro</div><div class="act-sub">Basé sur 31 retours</div></div><div class="act-time">Il y a 2j</div></div>
-          </div>
+      <div class="plan-card">
+        <div class="plan-top"><div class="plan-name" id="plan-name">Plan Découverte</div><div class="plan-badge">Actif</div></div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Compte gratuit — sans engagement</div>
+        <div style="font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px">Utilisation</div>
+        <div class="plan-prog"><div class="plan-bar" id="plan-bar" style="width:0%"></div></div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px" id="plan-usage">0 / 50 messages aujourd'hui</div>
+        <div class="plan-limits">
+          <div class="pl-item"><div class="pl-lbl">IAs créées</div><div class="pl-val" id="pl-agents">0 <span style="font-size:11px;font-weight:400;color:var(--muted)">/ 1</span></div></div>
+          <div class="pl-item"><div class="pl-lbl">Messages/jour</div><div class="pl-val">50</div></div>
         </div>
-        <div>
-          <div class="section-header"><div class="section-label">Mon abonnement</div></div>
-          <div class="plan-card">
-            <div class="plan-top"><div class="plan-name">Plan Pro · 18€/mois</div><div class="plan-badge">Actif</div></div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Renouvellement le 1er mai 2025</div>
-            <div style="font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px">Messages utilisés ce mois</div>
-            <div class="plan-progress"><div class="plan-bar" style="width:51%"></div></div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:14px">1 284 / 2 500 messages</div>
-            <div class="plan-limits">
-              <div class="pl-item"><div class="pl-label">IAs créées</div><div class="pl-val">3<span class="pl-max"> / 5</span></div></div>
-              <div class="pl-item"><div class="pl-label">Widgets actifs</div><div class="pl-val">1<span class="pl-max"> / 3</span></div></div>
-              <div class="pl-item"><div class="pl-label">Équipe</div><div class="pl-val">1<span class="pl-max"> / 3</span></div></div>
-              <div class="pl-item"><div class="pl-label">Stockage</div><div class="pl-val">2.1<span class="pl-max"> Go/5</span></div></div>
-            </div>
-            <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px">Passer au Business · 48€/mois</a>
-          </div>
-        </div>
+        <a href="#" class="btn btn-p" style="width:100%;justify-content:center;margin-top:16px">Passer au Pro · 18€/mois</a>
       </div>
     </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const datasets={'7j':{labels:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],values:[142,198,175,220,312,134,103]},'30j':{labels:['S1','S2','S3','S4'],values:[720,890,1050,1284]},'90j':{labels:['Jan','Fév','Mar'],values:[2100,2800,3944]}};
-function renderChart(key){const d=datasets[key];const area=document.getElementById('chart-area');const max=Math.max(...d.values);area.innerHTML='';d.values.forEach((v,i)=>{const pct=Math.round((v/max)*140);const bar=document.createElement('div');bar.className='bar';bar.style.height=pct+'px';bar.style.background='#2E9B5A';bar.style.opacity=i===d.values.indexOf(Math.max(...d.values))?'1':'0.55';bar.innerHTML=`<span class="bar-label">${d.labels[i]}</span><span class="bar-val">${v.toLocaleString()}</span>`;area.appendChild(bar);});}
-function switchTab(el,key){document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderChart(key);}
-renderChart('7j');
-let count=1284;setInterval(()=>{count+=Math.floor(Math.random()*3);document.getElementById('stat-msgs').textContent=count.toLocaleString('fr-FR');},4000);
+const SUPA_URL = 'https://bpmnbmbskimzeoawdtck.supabase.co';
+const SUPA_KEY = 'sb_publishable_l7bRvgvLdjCvxlNq7AtpJA_bm6axytJ';
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+async function signOut() { await db.auth.signOut(); window.location.href = 'index.html'; }
+
+async function init() {
+  // Vérif auth
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+  const user = session.user;
+
+  // Affiche les infos utilisateur
+  const name = user.user_metadata?.full_name || user.email.split('@')[0];
+  const initials = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('nav-avatar').textContent = initials;
+  document.getElementById('sn-avatar').textContent = initials;
+  document.getElementById('sn-name').textContent = name;
+  document.getElementById('welcome-title').textContent = `Bonjour, ${name.split(' ')[0]} 👋`;
+
+  // Charge les IAs
+  const { data: agents, error } = await db.from('ai_agents').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+  
+  // Stats
+  const totalMsgs = agents?.reduce((s,a) => s + (a.msg_count||0), 0) || 0;
+  const totalConvos = agents?.reduce((s,a) => s + (a.convo_count||0), 0) || 0;
+  document.getElementById('stat-msgs').textContent = totalMsgs;
+  document.getElementById('stat-convos').textContent = totalConvos;
+  document.getElementById('stat-agents').textContent = agents?.length || 0;
+  document.getElementById('pl-agents').innerHTML = `${agents?.length||0} <span style="font-size:11px;font-weight:400;color:var(--muted)">/ 1</span>`;
+  const pct = Math.min(100, Math.round((totalMsgs/50)*100));
+  document.getElementById('plan-bar').style.width = pct + '%';
+  document.getElementById('plan-usage').textContent = `${totalMsgs} / 50 messages aujourd'hui`;
+
+  // Affiche les IAs
+  const list = document.getElementById('ia-list');
+  if (!agents || agents.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🤖</div>
+        <div class="empty-title">Aucune IA pour l'instant</div>
+        <p class="empty-sub">Créez votre première IA personnalisée en 3 étapes. Choisissez un domaine, personnalisez-la et déployez-la.</p>
+        <a href="create.html" class="btn btn-p">⚡ Créer ma première IA</a>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = agents.map(a => `
+    <div class="ia-card">
+      <div class="ia-emo">${a.avatar||'🤖'}</div>
+      <div class="ia-body">
+        <div class="ia-name">${a.name}</div>
+        <div class="ia-domain">${a.domain||'Personnalisé'}</div>
+        <div class="ia-metrics">
+          <div class="ia-metric"><strong>${a.msg_count||0}</strong> messages</div>
+          <div class="ia-metric"><strong>${a.convo_count||0}</strong> conversations</div>
+        </div>
+      </div>
+      <div class="ia-status">
+        <span class="sdot ${a.is_active?'s-on':'s-off'}"></span>
+        <span style="color:${a.is_active?'var(--g2)':'var(--muted)'};font-size:12px">${a.is_active?'En ligne':'Hors ligne'}</span>
+      </div>
+      <div class="ia-actions">
+        <a href="chat.html?agent=${a.id}" class="ia-btn" title="Chat"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></a>
+        <a href="create.html?edit=${a.id}" class="ia-btn" title="Modifier"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></a>
+        <button class="ia-btn" title="Supprimer" onclick="deleteAgent('${a.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+      </div>
+    </div>
+  `).join('');
+
+  // Bouton ajouter
+  list.innerHTML += `<a href="create.html" class="add-ia"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Créer une nouvelle IA</a>`;
+}
+
+async function deleteAgent(id) {
+  if (!confirm('Supprimer cette IA ? Cette action est irréversible.')) return;
+  await db.from('ai_agents').delete().eq('id', id);
+  init();
+}
+
+init();
 </script>
 </body>
 </html>

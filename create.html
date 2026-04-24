@@ -1,290 +1,331 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Créer mon IA — TopIA</title>
-  <link rel="stylesheet" href="styles/main.css">
-  <style>
-    body{background:#F6FCF9}
-    .page{max-width:1100px;margin:0 auto;padding:40px 4% 80px;display:grid;grid-template-columns:1fr 380px;gap:40px;align-items:start}
-    .page-title{font-family:var(--font-display);font-size:2rem;color:var(--ink);margin-bottom:6px}
-    .page-sub{font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.6}
-    .progress-bar{display:flex;align-items:center;gap:0;margin-bottom:36px}
-    .prog-step{display:flex;align-items:center;gap:8px;cursor:pointer}
-    .prog-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;transition:all .2s;flex-shrink:0}
-    .prog-num.done{background:var(--g2);color:#fff}
-    .prog-num.active{background:var(--g1);color:#fff}
-    .prog-num.todo{background:#fff;color:var(--muted);border:1.5px solid var(--line)}
-    .prog-label{font-size:13px;font-weight:500;white-space:nowrap}
-    .prog-label.active{color:var(--g1)}
-    .prog-label.done{color:var(--g2)}
-    .prog-label.todo{color:var(--muted)}
-    .prog-line{flex:1;height:1.5px;background:var(--line);margin:0 12px;min-width:20px}
-    .prog-line.done{background:var(--g3)}
-    .form-section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;margin-bottom:20px}
-    .section-header{display:flex;align-items:center;gap:10px;margin-bottom:22px}
-    .section-num{width:26px;height:26px;border-radius:50%;background:var(--g7);color:var(--g2);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .section-title-txt{font-size:15px;font-weight:600;color:var(--ink)}
-    .section-sub-txt{font-size:12px;color:var(--muted);margin-top:1px}
-    .field{margin-bottom:20px}
-    .field:last-child{margin-bottom:0}
-    .field label{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:7px}
-    .hint{font-size:12px;color:var(--muted);margin-bottom:7px;line-height:1.5}
-    .field input[type=text],.field textarea,.field select{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:var(--font-body);color:var(--ink);background:#fff;outline:none;transition:border-color .2s}
-    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(46,155,90,.1)}
-    .field textarea{resize:vertical;min-height:90px;line-height:1.6}
-    .field select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A9A84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;-webkit-appearance:none}
-    .char-count{font-size:11px;color:var(--muted);text-align:right;margin-top:4px}
-    .domain-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
-    .domain-card{border:1.5px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .15s;background:#fff}
-    .domain-card:hover{border-color:var(--g4);background:var(--g8)}
-    .domain-card.selected{border-color:var(--g3);background:var(--g7)}
-    .domain-card.selected .dc-label{color:var(--g2)}
-    .dc-icon{font-size:22px;margin-bottom:6px}
-    .dc-label{font-size:12px;font-weight:600;color:var(--ink2)}
-    .tone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .tone-card{border:1.5px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;transition:all .15s;background:#fff}
-    .tone-card:hover{border-color:var(--g4);background:var(--g8)}
-    .tone-card.selected{border-color:var(--g3);background:var(--g7)}
-    .tone-card.selected .tc-name{color:var(--g2)}
-    .tc-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px}
-    .tc-desc{font-size:12px;color:var(--muted);line-height:1.4}
-    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--g8)}
-    .toggle-row:last-child{border:none}
-    .toggle-label{font-size:13px;color:var(--ink2);font-weight:500}
-    .toggle-sub{font-size:12px;color:var(--muted);margin-top:2px}
-    .toggle{width:38px;height:22px;border-radius:100px;border:none;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0}
-    .toggle.on{background:var(--g3)}
-    .toggle.off{background:#D3D1C7}
-    .toggle::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;transition:left .2s}
-    .toggle.on::after{left:19px}
-    .toggle.off::after{left:3px}
-    .avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-    .av-opt{width:100%;aspect-ratio:1;border-radius:12px;border:1.5px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .15s;background:#fff}
-    .av-opt:hover{border-color:var(--g4);background:var(--g8)}
-    .av-opt.selected{border-color:var(--g3);background:var(--g7)}
-    .color-row{display:flex;gap:10px;flex-wrap:wrap}
-    .col-opt{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
-    .col-opt.selected{border-color:var(--ink)}
-    .col-opt:hover{transform:scale(1.1)}
-    .form-actions{display:flex;gap:12px;justify-content:space-between;align-items:center;margin-top:8px}
-    .btn-prev{font-family:var(--font-body);font-size:14px;font-weight:500;color:var(--muted);background:none;border:1px solid var(--line);padding:12px 24px;border-radius:10px;cursor:pointer;transition:all .2s}
-    .btn-prev:hover{color:var(--ink2);border-color:var(--muted)}
-    .btn-next{font-family:var(--font-body);font-size:14px;font-weight:600;color:#fff;background:var(--g1);border:none;padding:12px 28px;border-radius:10px;cursor:pointer;transition:all .2s}
-    .btn-next:hover{background:var(--g2)}
-    .btn-create{font-family:var(--font-body);font-size:15px;font-weight:700;color:#fff;background:var(--g1);border:none;padding:15px 36px;border-radius:12px;cursor:pointer;transition:all .2s;width:100%;margin-top:20px}
-    .btn-create:hover{background:var(--g2)}
-    .preview-col{position:sticky;top:80px}
-    .preview-label{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;text-align:center}
-    .preview-card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden}
-    .preview-header{background:var(--g1);padding:20px 22px;display:flex;align-items:center;gap:14px}
-    .preview-avatar{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-    .preview-name{font-family:var(--font-display);font-size:1.1rem;color:#fff;margin-bottom:3px}
-    .preview-domain{font-size:12px;color:var(--g5);font-weight:500}
-    .preview-body{padding:18px}
-    .pm{padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.5;max-width:88%;margin-bottom:8px}
-    .pm-ai{background:var(--g8);border:1px solid var(--g6);color:var(--ink2);border-radius:4px 12px 12px 12px}
-    .pm-user{background:var(--g1);color:#fff;border-radius:12px 12px 4px 12px;margin-left:auto}
-    .preview-input{display:flex;gap:8px;align-items:center;background:var(--g8);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-top:10px}
-    .pi-text{flex:1;font-size:12px;color:var(--muted)}
-    .pi-btn{width:26px;height:26px;background:var(--g2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .pi-btn svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .preview-meta{padding:14px 18px 18px;border-top:1px solid var(--g8)}
-    .meta-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0}
-    .meta-label{font-size:12px;color:var(--muted)}
-    .meta-val{font-size:12px;font-weight:600;color:var(--ink2)}
-    .meta-badge{font-size:11px;font-weight:600;color:#27500A;background:#EAF3DE;padding:3px 10px;border-radius:100px}
-    .step-view{display:none}
-    .step-view.active{display:block}
-    .success-screen{text-align:center;padding:60px 20px}
-    .success-icon{width:72px;height:72px;border-radius:50%;background:var(--g7);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
-    .success-icon svg{width:36px;height:36px;stroke:var(--g2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .success-title{font-family:var(--font-display);font-size:1.8rem;color:var(--ink);margin-bottom:10px}
-    .success-sub{font-size:14px;color:var(--muted);line-height:1.65;max-width:340px;margin:0 auto 28px}
-    .success-actions{display:flex;flex-direction:column;gap:10px}
-    @media(max-width:768px){.page{grid-template-columns:1fr}.preview-col{display:none}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créer mon IA — TopIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g1:#0E3D1F;--g2:#1A6B3A;--g3:#2E9B5A;--g4:#4DBF7F;--g5:#A8DFBF;--g6:#D4F0E2;--g7:#EDF9F2;--g8:#F6FCF9;--ink:#0F1F14;--ink2:#2D4A36;--muted:#7A9A84;--line:#D6E8DC;--fd:'DM Serif Display',serif;--fb:'DM Sans',sans-serif}
+body{font-family:var(--fb);background:var(--g8);color:var(--ink);-webkit-font-smoothing:antialiased}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:100}
+.logo{font-family:var(--fd);font-size:1.4rem;color:var(--g1);display:flex;align-items:center;gap:7px;text-decoration:none}
+.logo-dot{width:9px;height:9px;background:var(--g3);border-radius:50%}
+.btn{font-family:var(--fb);font-size:14px;font-weight:600;padding:10px 22px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn-p{background:var(--g1);color:#fff}.btn-p:hover{background:var(--g2)}
+.btn-g{background:none;color:var(--ink2);border:1px solid var(--line)}.btn-g:hover{border-color:var(--g3);color:var(--g2)}
+.page{max-width:1100px;margin:0 auto;padding:40px 4% 80px;display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start}
+.page-title{font-family:var(--fd);font-size:2rem;color:var(--ink);margin-bottom:6px}
+.page-sub{font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.6}
+.prog-bar{display:flex;align-items:center;gap:0;margin-bottom:36px}
+.ps{display:flex;align-items:center;gap:8px;cursor:pointer}
+.pn{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;transition:all .2s;flex-shrink:0}
+.pn.done{background:var(--g2);color:#fff}
+.pn.active{background:var(--g1);color:#fff}
+.pn.todo{background:#fff;color:var(--muted);border:1.5px solid var(--line)}
+.pl{font-size:13px;font-weight:500;white-space:nowrap}
+.pl.active{color:var(--g1)}.pl.done{color:var(--g2)}.pl.todo{color:var(--muted)}
+.pline{flex:1;height:1.5px;background:var(--line);margin:0 12px;min-width:20px}
+.pline.done{background:var(--g3)}
+.fsec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;margin-bottom:20px}
+.fhdr{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.fnum{width:26px;height:26px;border-radius:50%;background:var(--g7);color:var(--g2);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ftitle{font-size:15px;font-weight:600;color:var(--ink)}
+.fsub{font-size:12px;color:var(--muted);margin-top:1px}
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:7px}
+.hint{font-size:12px;color:var(--muted);margin-bottom:7px;line-height:1.5}
+.field input,.field textarea,.field select{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:var(--fb);color:var(--ink);background:#fff;outline:none;transition:border-color .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(46,155,90,.1)}
+.field textarea{resize:vertical;min-height:90px;line-height:1.6}
+.field select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A9A84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;-webkit-appearance:none}
+.cc{font-size:11px;color:var(--muted);text-align:right;margin-top:4px}
+.domain-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.dc{border:1.5px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .15s;background:#fff}
+.dc:hover{border-color:var(--g4);background:var(--g8)}
+.dc.sel{border-color:var(--g3);background:var(--g7)}
+.dc.sel .dcl{color:var(--g2)}
+.dci{font-size:22px;margin-bottom:6px}
+.dcl{font-size:12px;font-weight:600;color:var(--ink2)}
+.tone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tc{border:1.5px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;transition:all .15s;background:#fff}
+.tc:hover{border-color:var(--g4);background:var(--g8)}
+.tc.sel{border-color:var(--g3);background:var(--g7)}
+.tc.sel .tcn{color:var(--g2)}
+.tcn{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.tcd{font-size:12px;color:var(--muted);line-height:1.4}
+.av-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.av{width:100%;aspect-ratio:1;border-radius:12px;border:1.5px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .15s;background:#fff}
+.av:hover{border-color:var(--g4);background:var(--g8)}
+.av.sel{border-color:var(--g3);background:var(--g7)}
+.col-row{display:flex;gap:10px;flex-wrap:wrap}
+.col{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.col.sel{border-color:var(--ink)}
+.col:hover{transform:scale(1.1)}
+.form-actions{display:flex;gap:12px;justify-content:space-between;align-items:center;margin-top:8px}
+.btn-prev{font-family:var(--fb);font-size:14px;font-weight:500;color:var(--muted);background:none;border:1px solid var(--line);padding:12px 24px;border-radius:10px;cursor:pointer;transition:all .2s}
+.btn-prev:hover{color:var(--ink2)}
+.btn-next{font-family:var(--fb);font-size:14px;font-weight:600;color:#fff;background:var(--g1);border:none;padding:12px 28px;border-radius:10px;cursor:pointer;transition:all .2s}
+.btn-next:hover{background:var(--g2)}
+.btn-create{font-family:var(--fb);font-size:15px;font-weight:700;color:#fff;background:var(--g1);border:none;padding:15px;border-radius:12px;cursor:pointer;transition:all .2s;width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-create:hover{background:var(--g2)}
+.btn-create:disabled{background:#B4B2A9;cursor:not-allowed}
+.spinner{display:none;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prev-col{position:sticky;top:80px}
+.prev-lbl{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;text-align:center}
+.prev-card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.prev-hdr{background:var(--g1);padding:20px 22px;display:flex;align-items:center;gap:14px}
+.prev-av{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.prev-name{font-family:var(--fd);font-size:1.1rem;color:#fff;margin-bottom:3px}
+.prev-dom{font-size:12px;color:var(--g5);font-weight:500}
+.prev-body{padding:18px}
+.pm{padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.5;max-width:88%;margin-bottom:8px}
+.pm-ai{background:var(--g8);border:1px solid var(--g6);color:var(--ink2);border-radius:4px 12px 12px 12px}
+.pm-u{background:var(--g1);color:#fff;border-radius:12px 12px 4px 12px;margin-left:auto}
+.prev-meta{padding:14px 18px 18px;border-top:1px solid var(--g8)}
+.mr{display:flex;align-items:center;justify-content:space-between;padding:5px 0}
+.ml{font-size:12px;color:var(--muted)}
+.mv{font-size:12px;font-weight:600;color:var(--ink2)}
+.mb{font-size:11px;font-weight:600;color:#27500A;background:#EAF3DE;padding:3px 10px;border-radius:100px}
+.step-view{display:none}
+.step-view.active{display:block}
+.success-screen{text-align:center;padding:60px 20px}
+.si{width:72px;height:72px;border-radius:50%;background:var(--g7);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.si svg{width:36px;height:36px;stroke:var(--g2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.st{font-family:var(--fd);font-size:1.8rem;color:var(--ink);margin-bottom:10px}
+.ss{font-size:14px;color:var(--muted);line-height:1.65;max-width:340px;margin:0 auto 28px}
+.sa{display:flex;flex-direction:column;gap:10px}
+.alert-err{display:none;padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;align-items:center;gap:10px;background:#FCEBEB;border:1px solid #F09595;color:#A32D2D}
+.alert-err.show{display:flex}
+@media(max-width:768px){.page{grid-template-columns:1fr}.prev-col{display:none}}
+</style>
 </head>
 <body>
-<nav class="topia-nav">
-  <a href="index.html" class="nav-logo"><span class="nav-logo-dot"></span>TopIA</a>
-  <div class="nav-actions">
-    <a href="dashboard.html" class="btn btn-ghost">← Dashboard</a>
-  </div>
+<nav>
+  <a href="index.html" class="logo"><span class="logo-dot"></span>TopIA</a>
+  <a href="dashboard.html" class="btn btn-g">← Dashboard</a>
 </nav>
 
 <div class="page">
-  <div class="form-col">
+  <div>
     <h1 class="page-title">Créer mon IA</h1>
-    <p class="page-sub">Configurez votre assistant en 3 étapes. La prévisualisation se met à jour en temps réel.</p>
-    <div class="progress-bar">
-      <div class="prog-step"><div class="prog-num active" id="pn1">1</div><span class="prog-label active" id="pl1">Identité</span></div>
-      <div class="prog-line" id="pline1"></div>
-      <div class="prog-step"><div class="prog-num todo" id="pn2">2</div><span class="prog-label todo" id="pl2">Comportement</span></div>
-      <div class="prog-line" id="pline2"></div>
-      <div class="prog-step"><div class="prog-num todo" id="pn3">3</div><span class="prog-label todo" id="pl3">Apparence</span></div>
+    <p class="page-sub">Configurez votre assistant en 3 étapes.</p>
+    <div class="prog-bar">
+      <div class="ps"><div class="pn active" id="pn1">1</div><span class="pl active" id="pl1">Identité</span></div>
+      <div class="pline" id="pline1"></div>
+      <div class="ps"><div class="pn todo" id="pn2">2</div><span class="pl todo" id="pl2">Comportement</span></div>
+      <div class="pline" id="pline2"></div>
+      <div class="ps"><div class="pn todo" id="pn3">3</div><span class="pl todo" id="pl3">Apparence</span></div>
     </div>
 
+    <div class="alert-err" id="form-err"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="err-msg"></span></div>
+
     <div id="step1" class="step-view active">
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">1</div><div><div class="section-title-txt">Nom de votre IA</div><div class="section-sub-txt">Visible par vos utilisateurs</div></div></div>
-        <div class="field"><label>Nom de l'IA</label><input type="text" id="ia-name" placeholder="Ex : TradeIA Pro, Chef Assistant..." maxlength="40" oninput="updatePreview()"><div class="char-count"><span id="name-count">0</span>/40</div></div>
-        <div class="field"><label>Courte description</label><p class="hint">Affiché sous le nom dans le chat</p><input type="text" id="ia-tagline" placeholder="Ex : Votre expert en trading & finance" maxlength="60" oninput="updatePreview()"><div class="char-count"><span id="tag-count">0</span>/60</div></div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">1</div><div><div class="ftitle">Nom de votre IA</div><div class="fsub">Visible par vos utilisateurs</div></div></div>
+        <div class="field"><label>Nom</label><input type="text" id="ia-name" placeholder="Ex : TradeIA Pro, Chef Assistant..." maxlength="40" oninput="up()"><div class="cc"><span id="nc">0</span>/40</div></div>
+        <div class="field"><label>Courte description</label><p class="hint">Affiché sous le nom dans le chat</p><input type="text" id="ia-tag" placeholder="Ex : Votre expert en trading & finance" maxlength="60" oninput="up()"><div class="cc"><span id="tc">0</span>/60</div></div>
       </div>
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">2</div><div><div class="section-title-txt">Domaine de spécialisation</div></div></div>
-        <div class="domain-grid" id="domain-grid">
-          <div class="domain-card selected" data-domain="Trading & Finance" onclick="selectDomain(this)"><div class="dc-icon">📈</div><div class="dc-label">Trading</div></div>
-          <div class="domain-card" data-domain="Maison & Quotidien" onclick="selectDomain(this)"><div class="dc-icon">🏠</div><div class="dc-label">Maison</div></div>
-          <div class="domain-card" data-domain="Nutrition & Cuisine" onclick="selectDomain(this)"><div class="dc-icon">🥗</div><div class="dc-label">Cuisine</div></div>
-          <div class="domain-card" data-domain="Droit & Administratif" onclick="selectDomain(this)"><div class="dc-icon">⚖️</div><div class="dc-label">Droit</div></div>
-          <div class="domain-card" data-domain="Sport & Bien-être" onclick="selectDomain(this)"><div class="dc-icon">💪</div><div class="dc-label">Sport</div></div>
-          <div class="domain-card" data-domain="E-commerce" onclick="selectDomain(this)"><div class="dc-icon">🛍️</div><div class="dc-label">E-commerce</div></div>
-          <div class="domain-card" data-domain="Éducation" onclick="selectDomain(this)"><div class="dc-icon">📚</div><div class="dc-label">Éducation</div></div>
-          <div class="domain-card" data-domain="Santé" onclick="selectDomain(this)"><div class="dc-icon">🩺</div><div class="dc-label">Santé</div></div>
-          <div class="domain-card" data-domain="Voyages" onclick="selectDomain(this)"><div class="dc-icon">✈️</div><div class="dc-label">Voyages</div></div>
-          <div class="domain-card" data-domain="Personnalisé" onclick="selectDomain(this)"><div class="dc-icon">✨</div><div class="dc-label">Autre</div></div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">2</div><div><div class="ftitle">Domaine</div></div></div>
+        <div class="domain-grid">
+          <div class="dc sel" data-v="Trading & Finance" onclick="selD(this)"><div class="dci">📈</div><div class="dcl">Trading</div></div>
+          <div class="dc" data-v="Maison & Quotidien" onclick="selD(this)"><div class="dci">🏠</div><div class="dcl">Maison</div></div>
+          <div class="dc" data-v="Nutrition & Cuisine" onclick="selD(this)"><div class="dci">🥗</div><div class="dcl">Cuisine</div></div>
+          <div class="dc" data-v="Droit & Administratif" onclick="selD(this)"><div class="dci">⚖️</div><div class="dcl">Droit</div></div>
+          <div class="dc" data-v="Sport & Bien-être" onclick="selD(this)"><div class="dci">💪</div><div class="dcl">Sport</div></div>
+          <div class="dc" data-v="E-commerce" onclick="selD(this)"><div class="dci">🛍️</div><div class="dcl">E-commerce</div></div>
+          <div class="dc" data-v="Éducation" onclick="selD(this)"><div class="dci">📚</div><div class="dcl">Éducation</div></div>
+          <div class="dc" data-v="Santé" onclick="selD(this)"><div class="dci">🩺</div><div class="dcl">Santé</div></div>
+          <div class="dc" data-v="Voyages" onclick="selD(this)"><div class="dci">✈️</div><div class="dcl">Voyages</div></div>
+          <div class="dc" data-v="Personnalisé" onclick="selD(this)"><div class="dci">✨</div><div class="dcl">Autre</div></div>
         </div>
       </div>
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">3</div><div><div class="section-title-txt">Mission de l'IA</div><div class="section-sub-txt">Décrivez ce que votre IA doit faire</div></div></div>
-        <div class="field"><p class="hint">Soyez précis : plus vous détaillez, plus votre IA sera performante.</p><textarea id="ia-mission" placeholder="Ex : Tu es un assistant spécialisé en trading de cryptomonnaies. Tu analyses les marchés, fournis des signaux d'entrée et de sortie..." maxlength="500" oninput="updatePreview()"></textarea><div class="char-count"><span id="mission-count">0</span>/500</div></div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">3</div><div><div class="ftitle">Mission</div><div class="fsub">Décrivez ce que votre IA doit faire</div></div></div>
+        <div class="field"><p class="hint">Plus vous êtes précis, plus votre IA sera performante.</p><textarea id="ia-mission" placeholder="Ex : Tu es un assistant spécialisé en trading de cryptomonnaies. Tu analyses les marchés, fournis des signaux..." maxlength="500" oninput="up()"></textarea><div class="cc"><span id="mc">0</span>/500</div></div>
       </div>
-      <div class="form-actions">
-        <div style="font-size:13px;color:var(--muted)">Étape 1 sur 3</div>
-        <button class="btn-next" onclick="goStep(2)">Continuer →</button>
-      </div>
+      <div class="form-actions"><div style="font-size:13px;color:var(--muted)">Étape 1 sur 3</div><button class="btn-next" onclick="goStep(2)">Continuer →</button></div>
     </div>
 
     <div id="step2" class="step-view">
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">1</div><div><div class="section-title-txt">Ton de la conversation</div></div></div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">1</div><div><div class="ftitle">Ton de la conversation</div></div></div>
         <div class="tone-grid">
-          <div class="tone-card selected" data-tone="Professionnel" onclick="selectTone(this)"><div class="tc-name">Professionnel</div><div class="tc-desc">Formel, précis, orienté résultats</div></div>
-          <div class="tone-card" data-tone="Amical" onclick="selectTone(this)"><div class="tc-name">Amical</div><div class="tc-desc">Chaleureux, accessible, encourageant</div></div>
-          <div class="tone-card" data-tone="Expert" onclick="selectTone(this)"><div class="tc-name">Expert</div><div class="tc-desc">Technique, détaillé, autoritaire</div></div>
-          <div class="tone-card" data-tone="Pédagogue" onclick="selectTone(this)"><div class="tc-name">Pédagogue</div><div class="tc-desc">Explique, simplifie, vulgarise</div></div>
+          <div class="tc sel" data-v="Professionnel" onclick="selT(this)"><div class="tcn">Professionnel</div><div class="tcd">Formel, précis, orienté résultats</div></div>
+          <div class="tc" data-v="Amical" onclick="selT(this)"><div class="tcn">Amical</div><div class="tcd">Chaleureux, accessible, encourageant</div></div>
+          <div class="tc" data-v="Expert" onclick="selT(this)"><div class="tcn">Expert</div><div class="tcd">Technique, détaillé, autoritaire</div></div>
+          <div class="tc" data-v="Pédagogue" onclick="selT(this)"><div class="tcn">Pédagogue</div><div class="tcd">Explique, simplifie, vulgarise</div></div>
         </div>
       </div>
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">2</div><div><div class="section-title-txt">Langue principale</div></div></div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">2</div><div><div class="ftitle">Langue principale</div></div></div>
         <div class="field"><select id="ia-lang"><option value="fr">Français 🇫🇷</option><option value="en">English 🇬🇧</option><option value="es">Español 🇪🇸</option><option value="de">Deutsch 🇩🇪</option><option value="auto">Détection automatique</option></select></div>
       </div>
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">3</div><div><div class="section-title-txt">Fonctionnalités</div></div></div>
-        <div class="toggle-row"><div><div class="toggle-label">Message de bienvenue</div><div class="toggle-sub">L'IA se présente au premier message</div></div><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
-        <div class="toggle-row"><div><div class="toggle-label">Suggestions de questions</div><div class="toggle-sub">Affiche des exemples de questions</div></div><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
-        <div class="toggle-row"><div><div class="toggle-label">Historique des conversations</div><div class="toggle-sub">L'IA se souvient des échanges</div></div><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
-        <div class="toggle-row"><div><div class="toggle-label">Mode widget intégrable</div><div class="toggle-sub">Génère un code pour votre site</div></div><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
-      </div>
-      <div class="form-actions">
-        <button class="btn-prev" onclick="goStep(1)">← Retour</button>
-        <button class="btn-next" onclick="goStep(3)">Continuer →</button>
-      </div>
+      <div class="form-actions"><button class="btn-prev" onclick="goStep(1)">← Retour</button><button class="btn-next" onclick="goStep(3)">Continuer →</button></div>
     </div>
 
     <div id="step3" class="step-view">
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">1</div><div><div class="section-title-txt">Avatar</div></div></div>
-        <div class="avatar-grid">
-          <div class="av-opt selected" onclick="selectAvatar(this,'📈')">📈</div>
-          <div class="av-opt" onclick="selectAvatar(this,'🤖')">🤖</div>
-          <div class="av-opt" onclick="selectAvatar(this,'🧠')">🧠</div>
-          <div class="av-opt" onclick="selectAvatar(this,'💡')">💡</div>
-          <div class="av-opt" onclick="selectAvatar(this,'🌿')">🌿</div>
-          <div class="av-opt" onclick="selectAvatar(this,'⚡')">⚡</div>
-          <div class="av-opt" onclick="selectAvatar(this,'🎯')">🎯</div>
-          <div class="av-opt" onclick="selectAvatar(this,'🔬')">🔬</div>
-          <div class="av-opt" onclick="selectAvatar(this,'📊')">📊</div>
-          <div class="av-opt" onclick="selectAvatar(this,'🛡️')">🛡️</div>
-          <div class="av-opt" onclick="selectAvatar(this,'🌍')">🌍</div>
-          <div class="av-opt" onclick="selectAvatar(this,'✨')">✨</div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">1</div><div><div class="ftitle">Avatar</div></div></div>
+        <div class="av-grid">
+          <div class="av sel" onclick="selAv(this,'📈')">📈</div><div class="av" onclick="selAv(this,'🤖')">🤖</div><div class="av" onclick="selAv(this,'🧠')">🧠</div><div class="av" onclick="selAv(this,'💡')">💡</div><div class="av" onclick="selAv(this,'🌿')">🌿</div><div class="av" onclick="selAv(this,'⚡')">⚡</div>
+          <div class="av" onclick="selAv(this,'🎯')">🎯</div><div class="av" onclick="selAv(this,'🔬')">🔬</div><div class="av" onclick="selAv(this,'📊')">📊</div><div class="av" onclick="selAv(this,'🛡️')">🛡️</div><div class="av" onclick="selAv(this,'🌍')">🌍</div><div class="av" onclick="selAv(this,'✨')">✨</div>
         </div>
       </div>
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">2</div><div><div class="section-title-txt">Couleur principale</div></div></div>
-        <div class="color-row">
-          <div class="col-opt selected" style="background:#0E3D1F" onclick="selectColor(this,'#0E3D1F')"></div>
-          <div class="col-opt" style="background:#1A6B3A" onclick="selectColor(this,'#1A6B3A')"></div>
-          <div class="col-opt" style="background:#185FA5" onclick="selectColor(this,'#185FA5')"></div>
-          <div class="col-opt" style="background:#534AB7" onclick="selectColor(this,'#534AB7')"></div>
-          <div class="col-opt" style="background:#993C1D" onclick="selectColor(this,'#993C1D')"></div>
-          <div class="col-opt" style="background:#993556" onclick="selectColor(this,'#993556')"></div>
-          <div class="col-opt" style="background:#444441" onclick="selectColor(this,'#444441')"></div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">2</div><div><div class="ftitle">Couleur principale</div></div></div>
+        <div class="col-row">
+          <div class="col sel" style="background:#0E3D1F" onclick="selC(this,'#0E3D1F')"></div>
+          <div class="col" style="background:#1A6B3A" onclick="selC(this,'#1A6B3A')"></div>
+          <div class="col" style="background:#185FA5" onclick="selC(this,'#185FA5')"></div>
+          <div class="col" style="background:#534AB7" onclick="selC(this,'#534AB7')"></div>
+          <div class="col" style="background:#993C1D" onclick="selC(this,'#993C1D')"></div>
+          <div class="col" style="background:#993556" onclick="selC(this,'#993556')"></div>
+          <div class="col" style="background:#444441" onclick="selC(this,'#444441')"></div>
         </div>
       </div>
-      <div class="form-section">
-        <div class="section-header"><div class="section-num">3</div><div><div class="section-title-txt">Message d'accueil</div></div></div>
-        <div class="field"><textarea id="ia-welcome" placeholder="Ex : Bonjour ! Je suis votre assistant. Comment puis-je vous aider ?" maxlength="200" oninput="updateWelcome()"></textarea><div class="char-count"><span id="welcome-count">0</span>/200</div></div>
+      <div class="fsec">
+        <div class="fhdr"><div class="fnum">3</div><div><div class="ftitle">Message d'accueil</div></div></div>
+        <div class="field"><textarea id="ia-welcome" placeholder="Ex : Bonjour ! Je suis votre assistant. Comment puis-je vous aider ?" maxlength="200" oninput="upW()"></textarea><div class="cc"><span id="wc">0</span>/200</div></div>
       </div>
-      <div class="form-section">
+      <div class="fsec">
         <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:16px">Récapitulatif</div>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--g8)"><span style="color:var(--muted)">Nom</span><span style="font-weight:600;color:var(--ink2)" id="recap-name">—</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--g8)"><span style="color:var(--muted)">Domaine</span><span style="font-weight:600;color:var(--ink2)" id="recap-domain">Trading & Finance</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0"><span style="color:var(--muted)">Ton</span><span style="font-weight:600;color:var(--ink2)" id="recap-tone">Professionnel</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--g8)"><span style="color:var(--muted)">Nom</span><span style="font-weight:600;color:var(--ink2)" id="rc-name">—</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--g8)"><span style="color:var(--muted)">Domaine</span><span style="font-weight:600;color:var(--ink2)" id="rc-domain">Trading & Finance</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0"><span style="color:var(--muted)">Ton</span><span style="font-weight:600;color:var(--ink2)" id="rc-tone">Professionnel</span></div>
         </div>
-        <button class="btn-create" onclick="createIA()">⚡ Créer mon IA maintenant</button>
+        <button class="btn-create" id="create-btn" onclick="createIA()">
+          <span id="create-lbl">⚡ Créer mon IA maintenant</span>
+          <div class="spinner" id="create-spin"></div>
+        </button>
       </div>
-      <div class="form-actions">
-        <button class="btn-prev" onclick="goStep(2)">← Retour</button>
-        <div style="font-size:13px;color:var(--muted)">Étape 3 sur 3</div>
-      </div>
+      <div class="form-actions"><button class="btn-prev" onclick="goStep(2)">← Retour</button><div style="font-size:13px;color:var(--muted)">Étape 3 sur 3</div></div>
     </div>
 
     <div id="step4" class="step-view">
-      <div class="form-section">
+      <div class="fsec">
         <div class="success-screen">
-          <div class="success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div class="success-title">Votre IA est prête !</div>
-          <p class="success-sub">Votre assistant a été créé avec succès. Vous pouvez maintenant l'utiliser ou l'intégrer sur votre site.</p>
-          <div class="success-actions">
-            <a href="chat.html" class="btn btn-primary btn-lg" style="justify-content:center">💬 Discuter avec mon IA</a>
-            <a href="dashboard.html" class="btn btn-ghost btn-lg" style="justify-content:center">Voir le dashboard →</a>
+          <div class="si"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="st">Votre IA est prête !</div>
+          <p class="ss">Votre assistant a été créé et sauvegardé. Vous pouvez maintenant l'utiliser ou retourner à votre dashboard.</p>
+          <div class="sa">
+            <a href="chat.html" class="btn btn-p" style="justify-content:center">💬 Discuter avec mon IA</a>
+            <a href="dashboard.html" class="btn btn-g" style="justify-content:center">Voir le dashboard →</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="preview-col">
-    <div class="preview-label">Prévisualisation en direct</div>
-    <div class="preview-card">
-      <div class="preview-header" id="preview-header">
-        <div class="preview-avatar" id="preview-avatar">📈</div>
-        <div>
-          <div class="preview-name" id="preview-name">Mon IA</div>
-          <div class="preview-domain" id="preview-domain">Trading & Finance</div>
-        </div>
+  <div class="prev-col">
+    <div class="prev-lbl">Prévisualisation</div>
+    <div class="prev-card">
+      <div class="prev-hdr" id="prev-hdr">
+        <div class="prev-av" id="prev-av">📈</div>
+        <div><div class="prev-name" id="prev-name">Mon IA</div><div class="prev-dom" id="prev-dom">Trading & Finance</div></div>
       </div>
-      <div class="preview-body">
-        <div class="pm pm-ai" id="preview-welcome">Bonjour ! Je suis votre assistant. Comment puis-je vous aider ?</div>
-        <div class="pm pm-user">Donne-moi une analyse rapide</div>
-        <div class="pm pm-ai">Bien sûr ! Voici mon analyse...</div>
-        <div class="preview-input"><div class="pi-text">Posez votre question...</div><div class="pi-btn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div></div>
+      <div class="prev-body">
+        <div class="pm pm-ai" id="prev-welcome">Bonjour ! Je suis votre assistant. Comment puis-je vous aider ?</div>
+        <div class="pm pm-u">Montre-moi ce que tu sais faire</div>
+        <div class="pm pm-ai">Bien sûr ! Je suis spécialisé dans votre domaine et prêt à vous aider...</div>
       </div>
-      <div class="preview-meta">
-        <div class="meta-row"><span class="meta-label">Domaine</span><span class="meta-val" id="meta-domain">Trading & Finance</span></div>
-        <div class="meta-row"><span class="meta-label">Ton</span><span class="meta-val" id="meta-tone">Professionnel</span></div>
-        <div class="meta-row"><span class="meta-label">Statut</span><span class="meta-badge">Prêt au lancement</span></div>
+      <div class="prev-meta">
+        <div class="mr"><span class="ml">Domaine</span><span class="mv" id="pm-dom">Trading & Finance</span></div>
+        <div class="mr"><span class="ml">Ton</span><span class="mv" id="pm-tone">Professionnel</span></div>
+        <div class="mr"><span class="ml">Statut</span><span class="mb">Prêt</span></div>
       </div>
     </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-let currentStep=1,selectedDomain='Trading & Finance',selectedTone='Professionnel',selectedAvatar='📈',selectedColor='#0E3D1F';
-function goStep(n){document.getElementById('step'+currentStep).classList.remove('active');document.getElementById('step'+n).classList.add('active');currentStep=n;updateProgress();updateRecap();}
-function updateProgress(){for(let i=1;i<=3;i++){const num=document.getElementById('pn'+i);const lbl=document.getElementById('pl'+i);if(i<currentStep){num.className='prog-num done';num.textContent='✓';lbl.className='prog-label done';}else if(i===currentStep){num.className='prog-num active';num.textContent=i;lbl.className='prog-label active';}else{num.className='prog-num todo';num.textContent=i;lbl.className='prog-label todo';}}for(let i=1;i<=2;i++){document.getElementById('pline'+i).className='prog-line'+(i<currentStep?' done':'');}}
-function updatePreview(){const name=document.getElementById('ia-name').value.trim();const tag=document.getElementById('ia-tagline').value.trim();document.getElementById('preview-name').textContent=name||'Mon IA';document.getElementById('preview-domain').textContent=tag||selectedDomain;document.getElementById('name-count').textContent=document.getElementById('ia-name').value.length;document.getElementById('tag-count').textContent=document.getElementById('ia-tagline').value.length;const mc=document.getElementById('ia-mission');if(mc)document.getElementById('mission-count').textContent=mc.value.length;document.getElementById('recap-name').textContent=name||'—';}
-function updateWelcome(){const w=document.getElementById('ia-welcome').value;document.getElementById('welcome-count').textContent=w.length;if(w.trim())document.getElementById('preview-welcome').textContent=w;}
-function selectDomain(el){document.querySelectorAll('.domain-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selectedDomain=el.dataset.domain;document.getElementById('preview-domain').textContent=selectedDomain;document.getElementById('meta-domain').textContent=selectedDomain;document.getElementById('recap-domain').textContent=selectedDomain;}
-function selectTone(el){document.querySelectorAll('.tone-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selectedTone=el.dataset.tone;document.getElementById('meta-tone').textContent=selectedTone;document.getElementById('recap-tone').textContent=selectedTone;}
-function selectAvatar(el,emoji){document.querySelectorAll('.av-opt').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selectedAvatar=emoji;document.getElementById('preview-avatar').textContent=emoji;}
-function selectColor(el,color){document.querySelectorAll('.col-opt').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selectedColor=color;document.getElementById('preview-header').style.background=color;}
-function updateRecap(){const name=document.getElementById('ia-name').value.trim();document.getElementById('recap-name').textContent=name||'—';document.getElementById('recap-domain').textContent=selectedDomain;document.getElementById('recap-tone').textContent=selectedTone;}
-function createIA(){goStep(4);}
+const SUPA_URL = 'https://bpmnbmbskimzeoawdtck.supabase.co';
+const SUPA_KEY = 'sb_publishable_l7bRvgvLdjCvxlNq7AtpJA_bm6axytJ';
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let step=1, domain='Trading & Finance', tone='Professionnel', avatar='📈', color='#0E3D1F', userId=null;
+
+// Auth check
+db.auth.getSession().then(({data:{session}})=>{
+  if(!session){window.location.href='login.html';return;}
+  userId = session.user.id;
+});
+
+function goStep(n){
+  if(n===2&&!document.getElementById('ia-name').value.trim()){
+    document.getElementById('err-msg').textContent='Veuillez donner un nom à votre IA.';
+    document.getElementById('form-err').classList.add('show');return;
+  }
+  document.getElementById('form-err').classList.remove('show');
+  document.getElementById('step'+step).classList.remove('active');
+  document.getElementById('step'+n).classList.add('active');
+  step=n; updateProg(); updateRecap();
+}
+function updateProg(){
+  for(let i=1;i<=3;i++){
+    const num=document.getElementById('pn'+i);const lbl=document.getElementById('pl'+i);
+    if(i<step){num.className='pn done';num.textContent='✓';lbl.className='pl done';}
+    else if(i===step){num.className='pn active';num.textContent=i;lbl.className='pl active';}
+    else{num.className='pn todo';num.textContent=i;lbl.className='pl todo';}
+  }
+  for(let i=1;i<=2;i++) document.getElementById('pline'+i).className='pline'+(i<step?' done':'');
+}
+function up(){
+  const n=document.getElementById('ia-name').value;
+  const t=document.getElementById('ia-tag').value;
+  document.getElementById('prev-name').textContent=n||'Mon IA';
+  document.getElementById('prev-dom').textContent=t||domain;
+  document.getElementById('nc').textContent=n.length;
+  document.getElementById('tc').textContent=t.length;
+  const m=document.getElementById('ia-mission').value;
+  document.getElementById('mc').textContent=m.length;
+  document.getElementById('rc-name').textContent=n||'—';
+}
+function upW(){
+  const w=document.getElementById('ia-welcome').value;
+  document.getElementById('wc').textContent=w.length;
+  if(w.trim())document.getElementById('prev-welcome').textContent=w;
+}
+function selD(el){document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');domain=el.dataset.v;document.getElementById('prev-dom').textContent=domain;document.getElementById('pm-dom').textContent=domain;document.getElementById('rc-domain').textContent=domain;}
+function selT(el){document.querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');tone=el.dataset.v;document.getElementById('pm-tone').textContent=tone;document.getElementById('rc-tone').textContent=tone;}
+function selAv(el,e){document.querySelectorAll('.av').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');avatar=e;document.getElementById('prev-av').textContent=e;}
+function selC(el,c){document.querySelectorAll('.col').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');color=c;document.getElementById('prev-hdr').style.background=c;}
+function updateRecap(){document.getElementById('rc-name').textContent=document.getElementById('ia-name').value.trim()||'—';document.getElementById('rc-domain').textContent=domain;document.getElementById('rc-tone').textContent=tone;}
+
+async function createIA(){
+  if(!userId){window.location.href='login.html';return;}
+  const name=document.getElementById('ia-name').value.trim();
+  const mission=document.getElementById('ia-mission').value.trim();
+  if(!name){document.getElementById('err-msg').textContent='Le nom est obligatoire.';document.getElementById('form-err').classList.add('show');return;}
+  const btn=document.getElementById('create-btn');
+  btn.disabled=true;
+  document.getElementById('create-lbl').style.display='none';
+  document.getElementById('create-spin').style.display='block';
+  const { error } = await db.from('ai_agents').insert({
+    user_id: userId,
+    name,
+    tagline: document.getElementById('ia-tag').value.trim(),
+    domain,
+    mission,
+    tone,
+    language: document.getElementById('ia-lang').value,
+    avatar,
+    color,
+    welcome_msg: document.getElementById('ia-welcome').value.trim() || `Bonjour ! Je suis ${name}. Comment puis-je vous aider ?`
+  });
+  btn.disabled=false;
+  document.getElementById('create-lbl').style.display='inline';
+  document.getElementById('create-spin').style.display='none';
+  if(error){document.getElementById('err-msg').textContent='Erreur : '+error.message;document.getElementById('form-err').classList.add('show');}
+  else{goStep(4);}
+}
 </script>
 </body>
 </html>
