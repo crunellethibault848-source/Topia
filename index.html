@@ -395,13 +395,17 @@ function setBilling(y) {
 }
 
 async function checkout(plan) {
-  const { data: { session } } = await db.auth.getSession();
-  if (!session) { window.location.href = 'signup.html'; return; }
-
   const spinEl = document.getElementById(plan === 'pro' ? 'pro-spin' : 'biz-spin');
   const lblEl  = document.getElementById(plan === 'pro' ? 'pro-lbl'  : 'biz-lbl');
   const btnEl  = document.getElementById(plan === 'pro' ? 'pro-btn'  : 'biz-btn');
   spinEl.style.display = 'block'; lblEl.style.display = 'none'; btnEl.disabled = true;
+
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) {
+    spinEl.style.display = 'none'; lblEl.style.display = 'inline'; btnEl.disabled = false;
+    window.location.href = 'signup.html';
+    return;
+  }
 
   const priceId = plan === 'pro'
     ? (yearly ? PRICE_IDS.pro_y : PRICE_IDS.pro_m)
