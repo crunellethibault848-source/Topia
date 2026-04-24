@@ -175,7 +175,7 @@ const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // Redirige si déjà connecté
 db.auth.getSession().then(({data:{session}}) => {
-  if (session) window.location.href = 'dashboard.html';
+  if (session) window.location.href = 'home.html';
 });
 
 function toggleEye(id, btn) {
@@ -210,7 +210,7 @@ function setLoading(id, on) {
 async function loginGoogle() {
   await db.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + '/dashboard.html' }
+    options: { redirectTo: window.location.origin + '/home.html' }
   });
 }
 
@@ -231,7 +231,7 @@ async function handleLogin() {
     document.getElementById('l-email').classList.add('err');
     document.getElementById('l-pass').classList.add('err');
   } else {
-    window.location.href = 'dashboard.html';
+    window.location.href = 'home.html';
   }
 }
 

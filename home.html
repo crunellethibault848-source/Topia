@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accueil — TopIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g1:#0E3D1F;--g2:#1A6B3A;--g3:#2E9B5A;--g4:#4DBF7F;--g5:#A8DFBF;--g6:#D4F0E2;--g7:#EDF9F2;--g8:#F6FCF9;--ink:#0F1F14;--ink2:#2D4A36;--muted:#7A9A84;--line:#D6E8DC;--fd:'DM Serif Display',serif;--fb:'DM Sans',sans-serif}
+body{font-family:var(--fb);background:var(--g8);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:100}
+.logo{font-family:var(--fd);font-size:1.4rem;color:var(--g1);display:flex;align-items:center;gap:7px;text-decoration:none}
+.logo-dot{width:9px;height:9px;background:var(--g3);border-radius:50%}
+.nav-right{display:flex;align-items:center;gap:10px}
+.btn{font-family:var(--fb);font-size:14px;font-weight:600;padding:9px 18px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;text-decoration:none}
+.btn-p{background:var(--g1);color:#fff}.btn-p:hover{background:var(--g2)}
+.btn-g{background:none;color:var(--ink2);border:1px solid var(--line)}.btn-g:hover{border-color:var(--g3);color:var(--g2)}
+.btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Dropdown avatar */
+.avatar-wrap{position:relative}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--g6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g2);cursor:pointer;border:2px solid transparent;transition:border-color .2s}
+.avatar:hover{border-color:var(--g3)}
+.dropdown{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;min-width:220px;box-shadow:0 8px 32px rgba(14,61,31,.1);display:none;z-index:200}
+.dropdown.open{display:block}
+.dd-header{padding:10px 12px 12px;border-bottom:1px solid var(--g8);margin-bottom:6px}
+.dd-name{font-size:14px;font-weight:600;color:var(--ink)}
+.dd-email{font-size:12px;color:var(--muted);margin-top:2px}
+.dd-plan{display:inline-block;font-size:11px;font-weight:600;color:var(--g2);background:var(--g7);padding:3px 8px;border-radius:100px;margin-top:6px}
+.dd-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;transition:background .15s;text-decoration:none}
+.dd-item:hover{background:var(--g8);color:var(--g2)}
+.dd-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.dd-divider{height:1px;background:var(--g8);margin:6px 0}
+.dd-item.danger{color:#A32D2D}.dd-item.danger:hover{background:#FCEBEB}
+
+/* ── HERO ── */
+.hero{max-width:1100px;margin:0 auto;padding:60px 4% 0}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px}
+.hero-greet{font-family:var(--fd);font-size:2.2rem;color:var(--ink);letter-spacing:-.5px}
+.hero-greet span{color:var(--g2)}
+.hero-sub{font-size:15px;color:var(--muted);margin-top:6px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ── QUICK ACTIONS ── */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:40px}
+.qa-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 20px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;gap:16px}
+.qa-card:hover{border-color:var(--g4);transform:translateY(-2px);box-shadow:0 6px 24px rgba(14,61,31,.07)}
+.qa-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.qi-green{background:var(--g7)}.qi-blue{background:#E6F1FB}.qi-amber{background:#FAEEDA}.qi-purple{background:#EDE8FE}
+.qa-label{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.qa-sub{font-size:12px;color:var(--muted)}
+
+/* ── MES IAs ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:16px;font-weight:700;color:var(--ink)}
+.ia-scroll{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:40px}
+.ia-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;transition:all .2s;text-decoration:none;display:block}
+.ia-card:hover{border-color:var(--g4);transform:translateY(-2px);box-shadow:0 6px 24px rgba(14,61,31,.07)}
+.ia-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ia-emo{width:44px;height:44px;border-radius:12px;background:var(--g8);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ia-name{font-size:15px;font-weight:700;color:var(--ink)}
+.ia-domain{font-size:12px;color:var(--g3);font-weight:500}
+.ia-sdot{width:7px;height:7px;border-radius:50%;background:var(--g4);margin-left:auto;animation:blink 2s infinite;flex-shrink:0}
+.ia-sdot.off{background:#B4B2A9;animation:none}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.ia-stats{display:flex;gap:16px}
+.ia-stat{font-size:12px;color:var(--muted)}
+.ia-stat strong{color:var(--ink2);font-weight:600}
+.ia-footer{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--g8)}
+.ia-action{flex:1;font-family:var(--fb);font-size:12px;font-weight:600;padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;color:var(--ink2)}
+.ia-action:hover{border-color:var(--g3);color:var(--g2);background:var(--g8)}
+.ia-action svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ia-action.primary{background:var(--g1);color:#fff;border-color:var(--g1)}.ia-action.primary:hover{background:var(--g2)}
+
+.add-ia{background:#fff;border:1.5px dashed var(--line);border-radius:16px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;color:var(--muted);text-decoration:none;min-height:140px}
+.add-ia:hover{border-color:var(--g3);color:var(--g2);background:var(--g7)}
+.add-ia svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.add-ia span{font-size:14px;font-weight:600}
+
+/* ── BOTTOM GRID ── */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-bottom:60px}
+.info-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+.info-card-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.info-card-title svg{width:16px;height:16px;stroke:var(--g2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.plan-name-big{font-family:var(--fd);font-size:1.4rem;color:var(--ink);margin-bottom:4px}
+.plan-badge{font-size:11px;font-weight:700;color:var(--g2);background:var(--g7);padding:3px 10px;border-radius:100px}
+.prog-wrap{height:6px;background:var(--g6);border-radius:100px;margin:14px 0 6px;overflow:hidden}
+.prog-bar{height:100%;background:var(--g3);border-radius:100px}
+.prog-txt{font-size:12px;color:var(--muted)}
+.plan-limits{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.pl-item{background:var(--g8);border-radius:8px;padding:10px}
+.pl-lbl{font-size:11px;color:var(--muted);margin-bottom:3px}
+.pl-val{font-size:15px;font-weight:700;color:var(--ink);font-family:var(--fd)}
+.tip-list{display:flex;flex-direction:column;gap:10px}
+.tip{display:flex;align-items:flex-start;gap:12px;padding:10px;border-radius:10px;background:var(--g8);cursor:pointer;transition:background .15s;text-decoration:none}
+.tip:hover{background:var(--g6)}
+.tip-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.tip-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.tip-sub{font-size:12px;color:var(--muted)}
+
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);gap:10px;font-size:14px}
+.spin{width:18px;height:18px;border:2px solid var(--line);border-top-color:var(--g3);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+@media(max-width:768px){.bottom-grid{grid-template-columns:1fr}.hero-top{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="home.html" class="logo"><span class="logo-dot"></span>TopIA</a>
+  <div class="nav-right">
+    <a href="dashboard.html" class="btn btn-g">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="create.html" class="btn btn-p">+ Nouvelle IA</a>
+    <div class="avatar-wrap">
+      <div class="avatar" id="nav-avatar" onclick="toggleDropdown()">?</div>
+      <div class="dropdown" id="dropdown">
+        <div class="dd-header">
+          <div class="dd-name" id="dd-name">Chargement...</div>
+          <div class="dd-email" id="dd-email"></div>
+          <span class="dd-plan" id="dd-plan">Plan Découverte</span>
+        </div>
+        <a href="dashboard.html" class="dd-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="create.html" class="dd-item">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Créer une IA
+        </a>
+        <a href="chat.html" class="dd-item">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Mes conversations
+        </a>
+        <div class="dd-divider"></div>
+        <a href="index.html#pricing" class="dd-item">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Gérer l'abonnement
+        </a>
+        <div class="dd-divider"></div>
+        <div class="dd-item danger" onclick="signOut()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Se déconnecter
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-greet" id="greet-title">Bonjour <span id="greet-name">👋</span></div>
+      <div class="hero-sub" id="greet-sub">Que voulez-vous faire aujourd'hui ?</div>
+    </div>
+    <div class="hero-actions">
+      <a href="chat.html" class="btn btn-g">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Ouvrir le chat
+      </a>
+      <a href="create.html" class="btn btn-p">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Créer une IA
+      </a>
+    </div>
+  </div>
+
+  <!-- Actions rapides -->
+  <div class="quick-grid">
+    <a href="create.html" class="qa-card">
+      <div class="qa-icon qi-green">⚡</div>
+      <div>
+        <div class="qa-label">Créer une IA</div>
+        <div class="qa-sub">Nouvelle IA en 3 étapes</div>
+      </div>
+    </a>
+    <a href="chat.html" class="qa-card">
+      <div class="qa-icon qi-blue">💬</div>
+      <div>
+        <div class="qa-label">Discuter</div>
+        <div class="qa-sub">Reprendre une conversation</div>
+      </div>
+    </a>
+    <a href="dashboard.html" class="qa-card">
+      <div class="qa-icon qi-amber">📊</div>
+      <div>
+        <div class="qa-label">Dashboard</div>
+        <div class="qa-sub">Stats et gestion</div>
+      </div>
+    </a>
+    <a href="index.html#pricing" class="qa-card">
+      <div class="qa-icon qi-purple">💎</div>
+      <div>
+        <div class="qa-label">Passer au Pro</div>
+        <div class="qa-sub">Débloquer toutes les fonctions</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Mes IAs -->
+  <div class="section-hdr">
+    <div class="section-title">Mes IAs</div>
+    <a href="dashboard.html" class="btn btn-g" style="font-size:13px;padding:7px 14px">Tout voir →</a>
+  </div>
+  <div class="ia-scroll" id="ia-scroll">
+    <div class="loading"><div class="spin"></div>Chargement...</div>
+  </div>
+
+  <!-- Bas de page -->
+  <div class="bottom-grid">
+    <div class="info-card">
+      <div class="info-card-title">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Mon abonnement
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="plan-name-big" id="plan-name">Découverte</div>
+        <span class="plan-badge">Actif</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted)">Messages utilisés aujourd'hui</div>
+      <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+      <div class="prog-txt" id="prog-txt">0 / 50 messages</div>
+      <div class="plan-limits">
+        <div class="pl-item"><div class="pl-lbl">IAs créées</div><div class="pl-val" id="pl-agents">0/1</div></div>
+        <div class="pl-item"><div class="pl-lbl">Messages/jour</div><div class="pl-val">50</div></div>
+      </div>
+      <a href="index.html#pricing" class="btn btn-p" style="width:100%;justify-content:center;margin-top:16px;font-size:13px">
+        Passer au Pro · 18€/mois →
+      </a>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Conseils pour bien démarrer
+      </div>
+      <div class="tip-list">
+        <a href="create.html" class="tip">
+          <div class="tip-icon">🎯</div>
+          <div><div class="tip-title">Soyez précis dans la mission</div><div class="tip-sub">Plus vous décrivez votre IA en détail, meilleures seront les réponses</div></div>
+        </a>
+        <a href="create.html" class="tip">
+          <div class="tip-icon">🌍</div>
+          <div><div class="tip-title">Choisissez la bonne langue</div><div class="tip-sub">Configurez la langue de votre IA selon vos utilisateurs</div></div>
+        </a>
+        <a href="index.html#pricing" class="tip">
+          <div class="tip-icon">🚀</div>
+          <div><div class="tip-title">Passez au Pro pour plus d'IAs</div><div class="tip-sub">5 IAs, messages illimités, widget intégrable</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL = 'https://bpmnbmbskimzeoawdtck.supabase.co';
+const SUPA_KEY = 'sb_publishable_l7bRvgvLdjCvxlNq7AtpJA_bm6axytJ';
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// Ferme dropdown si clic dehors
+document.addEventListener('click', e => {
+  if (!e.target.closest('.avatar-wrap')) {
+    document.getElementById('dropdown').classList.remove('open');
+  }
+});
+function toggleDropdown() {
+  document.getElementById('dropdown').classList.toggle('open');
+}
+async function signOut() {
+  await db.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+// Heure pour le message d'accueil
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Bonjour';
+  if (h < 18) return 'Bon après-midi';
+  return 'Bonsoir';
+}
+
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+  const user = session.user;
+
+  const name = user.user_metadata?.full_name || user.email.split('@')[0];
+  const firstName = name.split(' ')[0];
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+  // Nav
+  document.getElementById('nav-avatar').textContent = initials;
+  document.getElementById('dd-name').textContent = name;
+  document.getElementById('dd-email').textContent = user.email;
+
+  // Greeting
+  document.getElementById('greet-title').innerHTML = `${getGreeting()}, <span style="color:var(--g2)">${firstName} 👋</span>`;
+  document.getElementById('greet-sub').textContent = `Que souhaitez-vous faire aujourd'hui ?`;
+
+  // Charge les IAs
+  const { data: agents } = await db.from('ai_agents').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+
+  const totalMsgs = agents?.reduce((s, a) => s + (a.msg_count || 0), 0) || 0;
+  const pct = Math.min(100, Math.round((totalMsgs / 50) * 100));
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = `${totalMsgs} / 50 messages aujourd'hui`;
+  document.getElementById('pl-agents').textContent = `${agents?.length || 0}/1`;
+
+  const scroll = document.getElementById('ia-scroll');
+
+  if (!agents || agents.length === 0) {
+    scroll.innerHTML = `
+      <a href="create.html" class="add-ia">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Créer ma première IA</span>
+        <div style="font-size:12px;color:var(--muted)">3 étapes simples, aucune compétence requise</div>
+      </a>`;
+    return;
+  }
+
+  scroll.innerHTML = agents.map(a => `
+    <div class="ia-card">
+      <div class="ia-top">
+        <div class="ia-emo">${a.avatar || '🤖'}</div>
+        <div style="flex:1;min-width:0">
+          <div class="ia-name">${a.name}</div>
+          <div class="ia-domain">${a.domain || 'Personnalisé'}</div>
+        </div>
+        <div class="ia-sdot ${a.is_active ? '' : 'off'}"></div>
+      </div>
+      <div class="ia-stats">
+        <div class="ia-stat"><strong>${a.msg_count || 0}</strong> messages</div>
+        <div class="ia-stat"><strong>${a.convo_count || 0}</strong> conversations</div>
+      </div>
+      <div class="ia-footer">
+        <a href="chat.html?agent=${a.id}" class="ia-action primary">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Discuter
+        </a>
+        <a href="create.html?edit=${a.id}" class="ia-action">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Modifier
+        </a>
+      </div>
+    </div>
+  `).join('') + `
+    <a href="create.html" class="add-ia">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>Nouvelle IA</span>
+    </a>`;
+}
+
+init();
+</script>
+</body>
+</html>
