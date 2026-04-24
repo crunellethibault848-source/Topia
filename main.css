@@ -1,261 +1,196 @@
-# 🌿 TopIA — Guide de déploiement
+/* ============================================
+   TopIA — Design System
+   styles/main.css
+   ============================================ */
 
-## Structure du projet
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-```
-topia/
-├── index.html          ← Landing page
-├── login.html          ← Page connexion
-├── signup.html         ← Page inscription
-├── create.html         ← Créer une IA
-├── chat.html           ← Interface de chat
-├── dashboard.html      ← Tableau de bord
-├── styles/
-│   └── main.css        ← Design system partagé
-├── vercel.json         ← Config Vercel
-└── package.json
-```
-
----
-
-## 🚀 Mise en ligne en 4 étapes
-
-### Étape 1 — Créer un compte GitHub (gratuit)
-1. Va sur https://github.com et crée un compte
-2. Clique sur "New repository"
-3. Nomme-le `topia` (ou le nom que tu veux)
-4. Laisse-le Public, clique "Create repository"
-
-### Étape 2 — Uploader les fichiers sur GitHub
-**Option A — Via l'interface web (la plus simple) :**
-1. Dans ton repo GitHub, clique "uploading an existing file"
-2. Glisse-dépose tous les fichiers du dossier `topia/`
-3. N'oublie pas le dossier `styles/` avec `main.css`
-4. Clique "Commit changes"
-
-**Option B — Via Git (si tu l'as installé) :**
-```bash
-cd topia
-git init
-git add .
-git commit -m "Initial commit — TopIA"
-git branch -M main
-git remote add origin https://github.com/TON-USERNAME/topia.git
-git push -u origin main
-```
-
-### Étape 3 — Déployer sur Vercel (gratuit)
-1. Va sur https://vercel.com et crée un compte (avec GitHub)
-2. Clique "Add New Project"
-3. Sélectionne ton repo `topia`
-4. Laisse tous les paramètres par défaut
-5. Clique "Deploy"
-6. ✅ Ton site est en ligne ! Vercel te donne une URL comme `topia.vercel.app`
-
-### Étape 4 — Connecter ton nom de domaine (optionnel)
-1. Achète un domaine sur **OVH** (https://ovh.com) ou **Namecheap**
-   → Exemple : `topia.fr` coûte ~10€/an
-2. Dans Vercel → Settings → Domains
-3. Clique "Add Domain" → entre ton domaine
-4. Vercel te donne 2 enregistrements DNS à copier sur OVH/Namecheap
-5. Attends 5-30 minutes → ton site répond sur `topia.fr` ✅
-
----
-
-## 🔑 Configurer la clé API Anthropic
-
-Pour que le chat fonctionne en production, tu as besoin d'une clé API :
-
-1. Va sur https://console.anthropic.com
-2. Crée un compte et génère une clé API
-3. Dans Vercel → Settings → Environment Variables
-4. Ajoute : `ANTHROPIC_API_KEY` = ta clé
-
-**⚠️ Important :** La clé API ne doit JAMAIS être dans le code HTML public.
-Pour la production, il faut créer un petit backend (voir ci-dessous).
-
----
-
-## 🛡️ Backend simple pour sécuriser la clé API
-
-Crée un fichier `api/chat.js` dans ton projet :
-
-```javascript
-// api/chat.js — Vercel Serverless Function
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
-
-  const { messages, systemPrompt } = req.body;
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      system: systemPrompt,
-      messages: messages
-    })
-  });
-
-  const data = await response.json();
-  res.status(200).json(data);
+:root {
+  --g1: #0E3D1F;
+  --g2: #1A6B3A;
+  --g3: #2E9B5A;
+  --g4: #4DBF7F;
+  --g5: #A8DFBF;
+  --g6: #D4F0E2;
+  --g7: #EDF9F2;
+  --g8: #F6FCF9;
+  --ink: #0F1F14;
+  --ink2: #2D4A36;
+  --muted: #7A9A84;
+  --line: #D6E8DC;
+  --white: #ffffff;
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 2px 8px rgba(14,61,31,0.06);
+  --shadow-md: 0 4px 24px rgba(14,61,31,0.08);
+  --shadow-lg: 0 8px 48px rgba(14,61,31,0.10);
 }
-```
 
-Puis dans `chat.html`, remplace l'URL de l'API :
-```javascript
-// Avant (développement)
-const res = await fetch('https://api.anthropic.com/v1/messages', ...)
-
-// Après (production sécurisée)
-const res = await fetch('/api/chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ messages, systemPrompt: SYSTEM_PROMPT })
-})
-```
-
----
-
-## 💳 Ajouter les paiements (Stripe)
-
-Pour encaisser les abonnements Pro (18€) et Business (48€) :
-
-1. Crée un compte sur https://stripe.com
-2. Génère tes clés API Stripe
-3. Crée 2 produits dans Stripe Dashboard :
-   - TopIA Pro · 18€/mois (récurrent)
-   - TopIA Business · 48€/mois (récurrent)
-4. Utilise **Stripe Checkout** (le plus simple) :
-
-```javascript
-// api/create-checkout.js
-import Stripe from 'stripe';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-export default async function handler(req, res) {
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: [{ price: req.body.priceId, quantity: 1 }],
-    mode: 'subscription',
-    success_url: 'https://topia.fr/dashboard?success=true',
-    cancel_url: 'https://topia.fr/#pricing',
-  });
-  res.json({ url: session.url });
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-```
 
----
+html { scroll-behavior: smooth; }
 
-## 🗄️ Base de données (Supabase — gratuit)
+body {
+  font-family: var(--font-body);
+  background: #fff;
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-Pour stocker les utilisateurs et leurs IAs :
+/* ── Shared Nav ── */
+.topia-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  height: 68px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255,255,255,0.97);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--g1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.nav-logo-dot {
+  width: 10px; height: 10px;
+  background: var(--g3);
+  border-radius: 50%;
+  display: inline-block;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink2);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--g2); }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
 
-1. Crée un compte sur https://supabase.com
-2. Crée un nouveau projet
-3. Dans SQL Editor, exécute :
+/* ── Buttons ── */
+.btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--g1);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--g2); transform: translateY(-1px); }
+.btn-ghost {
+  background: none;
+  color: var(--ink2);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover { border-color: var(--g3); color: var(--g2); }
+.btn-lg { font-size: 15px; padding: 14px 32px; border-radius: 10px; }
 
-```sql
--- Table des utilisateurs
-CREATE TABLE users (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  email TEXT UNIQUE NOT NULL,
-  name TEXT,
-  plan TEXT DEFAULT 'free',
-  created_at TIMESTAMP DEFAULT NOW()
-);
+/* ── Cards ── */
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
 
--- Table des IAs
-CREATE TABLE ai_agents (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES users(id),
-  name TEXT NOT NULL,
-  domain TEXT,
-  mission TEXT,
-  tone TEXT DEFAULT 'professionnel',
-  avatar TEXT DEFAULT '🤖',
-  color TEXT DEFAULT '#0E3D1F',
-  is_active BOOLEAN DEFAULT true,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+/* ── Inputs ── */
+.form-field { margin-bottom: 18px; }
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink2);
+  margin-bottom: 7px;
+}
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus {
+  border-color: var(--g3);
+  box-shadow: 0 0 0 3px rgba(46,155,90,0.1);
+}
 
--- Table des conversations
-CREATE TABLE conversations (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  agent_id UUID REFERENCES ai_agents(id),
-  user_id UUID REFERENCES users(id),
-  messages JSONB DEFAULT '[]',
-  created_at TIMESTAMP DEFAULT NOW()
-);
-```
+/* ── Utilities ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+.text-muted { color: var(--muted); }
+.text-green { color: var(--g2); }
+.overline {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--g3);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
 
-4. Récupère ton `SUPABASE_URL` et `SUPABASE_ANON_KEY`
-5. Ajoute-les dans Vercel → Environment Variables
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+.animate-up { animation: fadeUp 0.6s ease both; }
+.animate-down { animation: fadeDown 0.5s ease both; }
 
----
-
-## 🔐 Authentification (Supabase Auth)
-
-Ajoute dans `login.html` :
-```html
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const supabase = window.supabase.createClient('TON_URL', 'TA_CLE_ANON');
-
-  async function handleLogin() {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: document.getElementById('email').value,
-      password: document.getElementById('password').value,
-    });
-    if (error) { /* afficher l'erreur */ return; }
-    window.location.href = '/dashboard.html';
-  }
-
-  // OAuth Google
-  async function loginWithGoogle() {
-    await supabase.auth.signInWithOAuth({ provider: 'google' });
-  }
-</script>
-```
-
----
-
-## 📋 Checklist avant le lancement
-
-- [ ] Tous les fichiers HTML uploadés sur GitHub
-- [ ] Site déployé sur Vercel et accessible
-- [ ] Clé API Anthropic configurée en variable d'environnement
-- [ ] Backend `/api/chat.js` créé (clé API sécurisée)
-- [ ] Nom de domaine acheté et connecté
-- [ ] Supabase configuré (utilisateurs + IAs)
-- [ ] Stripe configuré (abonnements Pro et Business)
-- [ ] Authentification testée (connexion + inscription)
-- [ ] Test sur mobile (responsive)
-- [ ] Politique de confidentialité rédigée
-- [ ] CGU rédigées
-
----
-
-## 💰 Coûts mensuels estimés au démarrage
-
-| Service | Plan | Coût |
-|---------|------|------|
-| Vercel | Hobby (gratuit) | 0€ |
-| Supabase | Free tier | 0€ |
-| Nom de domaine | topia.fr | ~10€/an |
-| API Anthropic | Pay-as-you-go | ~10-30€/mois |
-| Stripe | 0% jusqu'aux ventes | 0€ + 1.4% par transaction |
-| **Total démarrage** | | **~10-30€/mois** |
-
----
-
-## 📞 Besoin d'aide ?
-
-Pour toute question sur le déploiement, tu peux reprendre la conversation avec Claude et demander de l'aide sur chaque étape.
-
-Bonne chance avec TopIA ! 🌿
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .topia-nav { padding: 0 4%; }
+  .container { padding: 0 4%; }
+}
