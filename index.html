@@ -83,8 +83,6 @@ h2{font-family:var(--fd);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15;col
 .uc-ico{font-size:26px;margin-bottom:10px}
 .uc-lbl{font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:4px}
 .uc-sub{font-size:12px;color:var(--muted);line-height:1.4}
-
-/* ════════════════ PRICING ════════════════ */
 .pricing-sec{padding:100px 5%;background:var(--g8);border-top:1px solid var(--line)}
 .pricing-inner{max-width:1100px;margin:0 auto}
 .billing-toggle{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:32px;margin-bottom:56px}
@@ -120,10 +118,6 @@ h2{font-family:var(--fd);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15;col
 .pb-pro{background:var(--g1);color:#fff}.pb-pro:hover{background:var(--g2)}
 .pb-biz{background:#1C2840;color:#fff}.pb-biz:hover{background:#2A3A5C}
 .plan-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
-.spin{display:none;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-/* FAQ */
 .faq-wrap{max-width:780px;margin:80px auto 0}
 .faq-item{border-bottom:1px solid var(--line);padding:20px 0;cursor:pointer}
 .faq-item:last-child{border:none}
@@ -132,7 +126,6 @@ h2{font-family:var(--fd);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15;col
 .faq-item.open .faq-q svg{transform:rotate(180deg)}
 .faq-a{font-size:14px;color:var(--muted);line-height:1.75;max-height:0;overflow:hidden;transition:max-height .3s,padding .2s}
 .faq-item.open .faq-a{max-height:200px;padding-top:12px}
-
 .testi-sec{background:var(--g7);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:80px 5%}
 .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1100px;margin:48px auto 0}
 .testi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px}
@@ -144,17 +137,9 @@ h2{font-family:var(--fd);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15;col
 .cta-final{background:var(--g1);padding:100px 5%;text-align:center}
 .cta-final h2{font-family:var(--fd);font-size:clamp(1.8rem,4vw,3rem);color:#fff;margin-bottom:18px}
 .cta-final p{font-size:1rem;color:var(--g5);line-height:1.75;max-width:480px;margin:0 auto 36px}
-footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-.flogo{font-family:var(--fd);font-size:1.2rem;color:var(--g1)}
-.flinks{display:flex;gap:24px}
-.flinks a{font-size:13px;color:var(--muted);text-decoration:none}
-.flinks a:hover{color:var(--g2)}
-.fcopy{font-size:12px;color:var(--muted)}
 .nav-av{width:34px;height:34px;border-radius:50%;background:var(--g6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g2);cursor:pointer;text-decoration:none;border:2px solid transparent;transition:border-color .2s}
 .nav-av:hover{border-color:var(--g3)}
-@media(max-width:900px){.plans{grid-template-columns:1fr}.hero{grid-template-columns:1fr;gap:40px;padding:60px 4% 50px}.steps{grid-template-columns:1fr;gap:28px}footer{flex-direction:column;text-align:center}.nav-links{display:none}}
-
-/* ── Bannière cookies & Footer légal ── */
+/* ── Cookie Banner ── */
 .cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0E3D1F;color:#fff;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15);transform:translateY(100%);transition:transform .4s ease}
 .cookie-banner.visible{transform:translateY(0)}
 .cookie-text{font-size:13px;line-height:1.6;color:rgba(255,255,255,.85);flex:1;min-width:240px}
@@ -162,10 +147,11 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
 .cookie-actions{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap}
 .cookie-btn{font-family:var(--fb);font-size:13px;font-weight:600;padding:9px 20px;border-radius:8px;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
 .cookie-accept{background:#4DBF7F;color:#0E3D1F}.cookie-accept:hover{background:#6BD495}
-.cookie-refuse{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.2)!important}.cookie-refuse:hover{background:rgba(255,255,255,.18)}
+.cookie-refuse{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.2)!important}
+/* ── Legal Footer ── */
 .legal-footer{background:#0E3D1F;padding:40px 5% 28px;color:rgba(255,255,255,.6)}
 .lf-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;margin-bottom:36px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.1)}
-.lf-brand-name{font-family:var(--fd,'DM Serif Display',serif);font-size:1.4rem;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.lf-brand-name{font-family:var(--fd);font-size:1.4rem;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .lf-brand-dot{width:8px;height:8px;background:#4DBF7F;border-radius:50%}
 .lf-brand-desc{font-size:13px;line-height:1.65;color:rgba(255,255,255,.55);max-width:220px}
 .lf-col-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px}
@@ -177,16 +163,17 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
 .lf-legal-links a{font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s}
 .lf-legal-links a:hover{color:#fff}
 .lf-rgpd{font-size:11px;color:rgba(255,255,255,.3);margin-top:12px;text-align:center}
-@media(max-width:768px){.lf-top{grid-template-columns:1fr 1fr}.lf-bottom{flex-direction:column;align-items:flex-start}.cookie-banner{flex-direction:column;align-items:flex-start}}
+@media(max-width:900px){.plans{grid-template-columns:1fr}.hero{grid-template-columns:1fr;gap:40px;padding:60px 4% 50px}.steps{grid-template-columns:1fr;gap:28px}.nav-links{display:none}}
+@media(max-width:768px){.lf-top{grid-template-columns:1fr 1fr}.lf-bottom{flex-direction:column}.cookie-banner{flex-direction:column;align-items:flex-start}}
 @media(max-width:480px){.lf-top{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<!-- BANNIÈRE COOKIES -->
+
 <div class="cookie-banner" id="cookie-banner">
   <div class="cookie-text">
     🍪 TopIA utilise des cookies nécessaires au fonctionnement du service et, avec votre accord, des cookies analytiques pour améliorer votre expérience.
-    Consultez notre <a href="confidentialite.html">politique de confidentialité</a> et nos <a href="cgu.html">CGU</a>.
+    <a href="confidentialite.html">Politique de confidentialité</a> · <a href="cgu.html">CGU</a>
   </div>
   <div class="cookie-actions">
     <button class="cookie-btn cookie-refuse" onclick="refuseCookies()">Refuser les optionnels</button>
@@ -272,28 +259,18 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
   </div>
 </section>
 
-<!-- ════════ TARIFS ════════ -->
 <section class="pricing-sec" id="pricing">
   <div class="pricing-inner">
-    <div class="sec-c">
-      <p class="overline">Tarifs</p>
-      <h2>Simple, transparent, évolutif</h2>
-      <p class="lead">Commencez gratuitement. Passez au niveau supérieur quand vous êtes prêt.</p>
-    </div>
-
+    <div class="sec-c"><p class="overline">Tarifs</p><h2>Simple, transparent, évolutif</h2><p class="lead">Commencez gratuitement. Passez au niveau supérieur quand vous êtes prêt.</p></div>
     <div class="billing-toggle">
       <span class="bt-opt active" id="m-lbl" onclick="setBilling(false)">Mensuel</span>
       <div class="bt-switch" id="bt-sw" onclick="setBilling(!yearly)"></div>
       <span class="bt-opt" id="y-lbl" onclick="setBilling(true)">Annuel <span class="save-pill">−20%</span></span>
     </div>
-
     <div class="plans">
-      <!-- Découverte -->
       <div class="plan">
-        <div class="plan-icon pi-f">🌱</div>
-        <div class="plan-name">Découverte</div>
-        <div class="plan-price">0€</div>
-        <div class="plan-per">pour toujours</div>
+        <div class="plan-icon pi-f">🌱</div><div class="plan-name">Découverte</div>
+        <div class="plan-price">0€</div><div class="plan-per">pour toujours</div>
         <div class="plan-desc">Découvrez TopIA et créez votre première IA sans engagement.</div>
         <div class="plan-hr"></div>
         <ul class="plan-feats">
@@ -307,14 +284,10 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
         <a href="signup.html" class="plan-btn pb-free">Commencer gratuitement</a>
         <div class="plan-note">Aucune carte bancaire</div>
       </div>
-
-      <!-- Pro -->
       <div class="plan featured">
         <div class="pop-badge">✦ Le plus populaire</div>
-        <div class="plan-icon pi-p">⚡</div>
-        <div class="plan-name">Pro</div>
-        <div class="plan-price" id="pro-price">18€</div>
-        <div class="plan-per" id="pro-per">/mois · facturé mensuellement</div>
+        <div class="plan-icon pi-p">⚡</div><div class="plan-name">Pro</div>
+        <div class="plan-price" id="pro-price">18€</div><div class="plan-per" id="pro-per">/mois · facturé mensuellement</div>
         <div class="plan-desc">Pour les utilisateurs réguliers qui veulent tirer le meilleur de TopIA.</div>
         <div class="plan-hr"></div>
         <ul class="plan-feats">
@@ -325,19 +298,12 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
           <li><div class="chk chk-b"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Support prioritaire</li>
           <li><div class="chk chk-n"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></div><span class="feat-off">API dédiée</span></li>
         </ul>
-        <button class="plan-btn pb-pro" id="pro-btn" onclick="checkout('pro')">
-          <span id="pro-lbl">Choisir Pro</span>
-          <div class="spin" id="pro-spin"></div>
-        </button>
+        <button class="plan-btn pb-pro" id="pro-btn" onclick="checkout('pro')"><span id="pro-lbl">Choisir Pro</span></button>
         <div class="plan-note">Annulable à tout moment</div>
       </div>
-
-      <!-- Business -->
       <div class="plan">
-        <div class="plan-icon pi-b">🏢</div>
-        <div class="plan-name">Business</div>
-        <div class="plan-price" id="biz-price">48€</div>
-        <div class="plan-per" id="biz-per">/mois · facturé mensuellement</div>
+        <div class="plan-icon pi-b">🏢</div><div class="plan-name">Business</div>
+        <div class="plan-price" id="biz-price">48€</div><div class="plan-per" id="biz-per">/mois · facturé mensuellement</div>
         <div class="plan-desc">Pour les entreprises qui déploient TopIA à grande échelle.</div>
         <div class="plan-hr"></div>
         <ul class="plan-feats">
@@ -348,37 +314,17 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
           <li><div class="chk chk-v"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Account manager dédié</li>
           <li><div class="chk chk-v"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>SLA garanti 99.9%</li>
         </ul>
-        <button class="plan-btn pb-biz" id="biz-btn" onclick="checkout('business')">
-          <span id="biz-lbl">Choisir Business</span>
-          <div class="spin" id="biz-spin"></div>
-        </button>
+        <button class="plan-btn pb-biz" id="biz-btn" onclick="checkout('business')"><span id="biz-lbl">Choisir Business</span></button>
         <div class="plan-note">Annulable à tout moment</div>
       </div>
     </div>
-
-    <!-- FAQ -->
     <div class="faq-wrap">
       <div style="text-align:center;margin-bottom:48px"><p class="overline">FAQ</p><h2>Questions fréquentes</h2></div>
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">Puis-je changer de plan à tout moment ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="faq-a">Oui, vous pouvez passer à un plan supérieur ou inférieur à tout moment depuis votre dashboard. Les changements prennent effet immédiatement.</div>
-      </div>
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">Comment fonctionne le plan gratuit ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="faq-a">Le plan Découverte est gratuit pour toujours, sans carte bancaire. Vous pouvez créer 1 IA et envoyer jusqu'à 50 messages par jour. Idéal pour tester TopIA avant de s'engager.</div>
-      </div>
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">Mes données sont-elles sécurisées ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="faq-a">Absolument. Toutes vos données sont chiffrées en transit et au repos. Hébergées en Europe via Supabase, elles ne sont jamais partagées avec des tiers.</div>
-      </div>
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">Qu'est-ce qu'un widget intégrable ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="faq-a">Le widget vous permet d'ajouter votre IA sur n'importe quel site web avec un simple copier-coller de code. Vos visiteurs peuvent interagir avec votre IA directement depuis votre site.</div>
-      </div>
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">Comment TopIA est-il propulsé par Claude ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="faq-a">TopIA utilise l'API Claude d'Anthropic, l'un des modèles d'IA les plus avancés et sûrs du marché. Cela garantit des réponses de haute qualité pour vos utilisateurs.</div>
-      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Puis-je changer de plan à tout moment ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a">Oui, vous pouvez passer à un plan supérieur ou inférieur à tout moment depuis votre dashboard.</div></div>
+      <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Comment fonctionne le plan gratuit ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a">Le plan Découverte est gratuit pour toujours, sans carte bancaire. 1 IA et 50 messages par jour.</div></div>
+      <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Mes données sont-elles sécurisées ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a">Absolument. Toutes vos données sont chiffrées, hébergées en Europe via Supabase, jamais partagées avec des tiers.</div></div>
+      <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Qu'est-ce qu'un widget intégrable ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a">Un simple copier-coller de code pour ajouter votre IA sur n'importe quel site. Vos visiteurs peuvent interagir avec elle directement.</div></div>
+      <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Comment TopIA est-il propulsé par Claude ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a">TopIA utilise l'API Claude d'Anthropic, l'un des modèles d'IA les plus avancés et sûrs du marché.</div></div>
     </div>
   </div>
 </section>
@@ -398,75 +344,61 @@ footer{padding:40px 5%;border-top:1px solid var(--line);display:flex;align-items
   <a href="signup.html" class="btn btn-w btn-lg">Créer mon IA gratuitement →</a>
 </section>
 
-<footer>
-  <div class="flogo">TopIA</div>
-  <div class="flinks"><a href="#features">Fonctionnalités</a><a href="#pricing">Tarifs</a><a href="#">Blog</a><a href="#">Confidentialité</a><a href="#">CGU</a><a href="login.html">Connexion</a></div>
-  <div class="fcopy">© 2025 TopIA · Tous droits réservés</div>
+<footer class="legal-footer">
+  <div class="lf-top">
+    <div>
+      <div class="lf-brand-name"><span class="lf-brand-dot"></span>TopIA</div>
+      <div class="lf-brand-desc">Créez votre assistant IA personnalisé en quelques minutes. Sans compétence technique.</div>
+    </div>
+    <div>
+      <div class="lf-col-title">Produit</div>
+      <a href="#features" class="lf-link">Fonctionnalités</a>
+      <a href="#pricing" class="lf-link">Tarifs</a>
+      <a href="create.html" class="lf-link">Créer une IA</a>
+      <a href="chat.html" class="lf-link">Chat</a>
+    </div>
+    <div>
+      <div class="lf-col-title">Compte</div>
+      <a href="login.html" class="lf-link">Connexion</a>
+      <a href="signup.html" class="lf-link">Inscription gratuite</a>
+      <a href="dashboard.html" class="lf-link">Dashboard</a>
+      <a href="home.html" class="lf-link">Mon espace</a>
+    </div>
+    <div>
+      <div class="lf-col-title">Légal</div>
+      <a href="cgu.html" class="lf-link">CGU</a>
+      <a href="confidentialite.html" class="lf-link">Confidentialité & RGPD</a>
+      <a href="confidentialite.html" class="lf-link">Cookies</a>
+      <a href="mailto:contact@topia.fr" class="lf-link">Contact</a>
+    </div>
+  </div>
+  <div class="lf-bottom">
+    <div class="lf-copy">© 2025 TopIA · Thibault Crunelle · Tous droits réservés</div>
+    <div class="lf-legal-links">
+      <a href="cgu.html">CGU</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="mailto:contact@topia.fr">contact@topia.fr</a>
+    </div>
+  </div>
+  <div class="lf-rgpd">Conforme RGPD · Données hébergées en Europe · Aucune revente de données</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ══════════════════════════════════════
-// ⚠️ REMPLACE CES VALEURS AVEC STRIPE
-// ══════════════════════════════════════
-const STRIPE_PK = 'pk_live_51T5SSZHzUGYkRRaYbb45PlLGyzaQajYKoeXRJqle8zuR9SqHDRBATycbSojr4PfXoW14NhczXx1a2a64PmWbxz6c00xAlbk99n';
-const PRICE_IDS = {
-  pro_m:  'price_1TPo6FHzUGYkRRaYu9FnE1jm',
-  pro_y:  'price_1TPo7sHzUGYkRRaYIiAKwIoB',
-  biz_m:  'price_1TPo8qHzUGYkRRaYS3QkvseG',
-  biz_y:  'price_1TPo9VHzUGYkRRaYFkMHG3HQ',
-};
-
-const SUPA_URL = 'https://bpmnbmbskimzeoawdtck.supabase.co';
-const SUPA_KEY = 'sb_publishable_l7bRvgvLdjCvxlNq7AtpJA_bm6axytJ';
-const db = supabase.createClient(SUPA_URL, SUPA_KEY);
-
-let yearly = false;
-
-function setBilling(y) {
-  yearly = y;
-  document.getElementById('bt-sw').classList.toggle('on', y);
-  document.getElementById('m-lbl').classList.toggle('active', !y);
-  document.getElementById('y-lbl').classList.toggle('active', y);
-  document.getElementById('pro-price').textContent = y ? '14€' : '18€';
-  document.getElementById('pro-per').textContent = y ? '/mois · facturé 173€/an' : '/mois · facturé mensuellement';
-  document.getElementById('biz-price').textContent = y ? '38€' : '48€';
-  document.getElementById('biz-per').textContent = y ? '/mois · facturé 461€/an' : '/mois · facturé mensuellement';
-}
-
-const PAYMENT_LINKS = {
-  pro_m:  'https://buy.stripe.com/4gM7sL6ds0GidmEabP1kA01',
-  pro_y:  'https://buy.stripe.com/00w9AT6ds4WydmEfw91kA02',
-  biz_m:  'https://buy.stripe.com/3cI00j59ocp03M497L1kA03',
-  biz_y:  'https://buy.stripe.com/fZu8wP59o74GdmE1Fj1kA04',
-};
-
-async function checkout(plan) {
-  const { data: { session } } = await db.auth.getSession();
-  if (!session) {
-    window.location.href = 'signup.html';
-    return;
-  }
-  const link = plan === 'pro'
-    ? (yearly ? PAYMENT_LINKS.pro_y : PAYMENT_LINKS.pro_m)
-    : (yearly ? PAYMENT_LINKS.biz_y : PAYMENT_LINKS.biz_m);
-  window.location.href = link;
-}
-
-// Vérifie si connecté et adapte la nav
-async function checkSession() {
-  const { data: { session } } = await db.auth.getSession();
-  if (session) {
-    const user = session.user;
-    const name = user.user_metadata?.full_name || user.email.split('@')[0];
-    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-    document.getElementById('nav-actions').innerHTML = `
-      <a href="home.html" class="btn btn-g">🏠 Accueil</a>
-      <a href="home.html" class="nav-av" title="${name}">${initials}</a>
-    `;
-  }
-}
+const SUPA_URL='https://bpmnbmbskimzeoawdtck.supabase.co';
+const SUPA_KEY='sb_publishable_l7bRvgvLdjCvxlNq7AtpJA_bm6axytJ';
+const db=supabase.createClient(SUPA_URL,SUPA_KEY);
+const PAYMENT_LINKS={pro_m:'https://buy.stripe.com/4gM7sL6ds0GidmEabP1kA01',pro_y:'https://buy.stripe.com/00w9AT6ds4WydmEfw91kA02',biz_m:'https://buy.stripe.com/3cI00j59ocp03M497L1kA03',biz_y:'https://buy.stripe.com/fZu8wP59o74GdmE1Fj1kA04'};
+let yearly=false;
+function setBilling(y){yearly=y;document.getElementById('bt-sw').classList.toggle('on',y);document.getElementById('m-lbl').classList.toggle('active',!y);document.getElementById('y-lbl').classList.toggle('active',y);document.getElementById('pro-price').textContent=y?'14€':'18€';document.getElementById('pro-per').textContent=y?'/mois · facturé 173€/an':'/mois · facturé mensuellement';document.getElementById('biz-price').textContent=y?'38€':'48€';document.getElementById('biz-per').textContent=y?'/mois · facturé 461€/an':'/mois · facturé mensuellement';}
+async function checkout(plan){const{data:{session}}=await db.auth.getSession();if(!session){window.location.href='signup.html';return;}const link=plan==='pro'?(yearly?PAYMENT_LINKS.pro_y:PAYMENT_LINKS.pro_m):(yearly?PAYMENT_LINKS.biz_y:PAYMENT_LINKS.biz_m);window.location.href=link;}
+async function checkSession(){const{data:{session}}=await db.auth.getSession();if(session){const user=session.user;const name=user.user_metadata?.full_name||user.email.split('@')[0];const initials=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('nav-actions').innerHTML=`<a href="home.html" class="btn btn-g">🏠 Accueil</a><a href="home.html" class="nav-av" title="${name}">${initials}</a>`;}}
 checkSession();
+function initCookieBanner(){const c=localStorage.getItem('topia_cookie_consent');if(!c){setTimeout(()=>{const b=document.getElementById('cookie-banner');if(b)b.classList.add('visible');},800);}}
+function acceptCookies(){localStorage.setItem('topia_cookie_consent','accepted');hideBanner();}
+function refuseCookies(){localStorage.setItem('topia_cookie_consent','refused');hideBanner();}
+function hideBanner(){const b=document.getElementById('cookie-banner');if(b){b.style.transform='translateY(100%)';setTimeout(()=>b.style.display='none',400);}}
+document.addEventListener('DOMContentLoaded',initCookieBanner);
 </script>
 </body>
 </html>
