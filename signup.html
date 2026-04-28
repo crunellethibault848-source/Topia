@@ -71,9 +71,47 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 5%;h
 .div-line{flex:1;height:1px;background:var(--line)}
 .div-txt{font-size:12px;color:var(--muted);white-space:nowrap}
 @media(max-width:768px){.page{grid-template-columns:1fr}.left{display:none}.right{padding:40px 24px}}
+
+/* ── Bannière cookies & Footer légal ── */
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0E3D1F;color:#fff;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15);transform:translateY(100%);transition:transform .4s ease}
+.cookie-banner.visible{transform:translateY(0)}
+.cookie-text{font-size:13px;line-height:1.6;color:rgba(255,255,255,.85);flex:1;min-width:240px}
+.cookie-text a{color:#4DBF7F;text-decoration:underline}
+.cookie-actions{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.cookie-btn{font-family:var(--fb);font-size:13px;font-weight:600;padding:9px 20px;border-radius:8px;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+.cookie-accept{background:#4DBF7F;color:#0E3D1F}.cookie-accept:hover{background:#6BD495}
+.cookie-refuse{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.2)!important}.cookie-refuse:hover{background:rgba(255,255,255,.18)}
+.legal-footer{background:#0E3D1F;padding:40px 5% 28px;color:rgba(255,255,255,.6)}
+.lf-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;margin-bottom:36px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.1)}
+.lf-brand-name{font-family:var(--fd,'DM Serif Display',serif);font-size:1.4rem;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.lf-brand-dot{width:8px;height:8px;background:#4DBF7F;border-radius:50%}
+.lf-brand-desc{font-size:13px;line-height:1.65;color:rgba(255,255,255,.55);max-width:220px}
+.lf-col-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px}
+.lf-link{display:block;font-size:13px;color:rgba(255,255,255,.65);text-decoration:none;margin-bottom:9px;transition:color .2s}
+.lf-link:hover{color:#fff}
+.lf-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.lf-copy{font-size:12px;color:rgba(255,255,255,.35)}
+.lf-legal-links{display:flex;gap:20px}
+.lf-legal-links a{font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s}
+.lf-legal-links a:hover{color:#fff}
+.lf-rgpd{font-size:11px;color:rgba(255,255,255,.3);margin-top:12px;text-align:center}
+@media(max-width:768px){.lf-top{grid-template-columns:1fr 1fr}.lf-bottom{flex-direction:column;align-items:flex-start}.cookie-banner{flex-direction:column;align-items:flex-start}}
+@media(max-width:480px){.lf-top{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<!-- BANNIÈRE COOKIES -->
+<div class="cookie-banner" id="cookie-banner">
+  <div class="cookie-text">
+    🍪 TopIA utilise des cookies nécessaires au fonctionnement du service et, avec votre accord, des cookies analytiques pour améliorer votre expérience.
+    Consultez notre <a href="confidentialite.html">politique de confidentialité</a> et nos <a href="cgu.html">CGU</a>.
+  </div>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-refuse" onclick="refuseCookies()">Refuser les optionnels</button>
+    <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Tout accepter ✓</button>
+  </div>
+</div>
+
 <nav>
   <a href="index.html" class="logo"><span class="logo-dot"></span>TopIA</a>
   <a href="login.html" class="btn btn-g">Déjà un compte ?</a>
